@@ -1,30 +1,19 @@
-/vendor/
-node_modules/
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+/appbase/.env
+.env
+.env_dev
+.env_example
+.env_backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
 npm-debug.log
 yarn-error.log
-
-# Laravel 4 specific
-bootstrap/compiled.php
-app/storage/
-
-# Laravel 5 & Lumen specific
-public/storage
-public/hot
-
-# Laravel 5 & Lumen specific with changed public path
-public_html/storage
-public_html/hot
-
-storage/*.key
-.env
-Homestead.yaml
-Homestead.json
-/.vagrant
-.phpunit.result.cache
-
-/public/build
-/storage/pail
-.env.backup
-.env.production
-.phpactor.json
-auth.json
+devstart.sh
+k8s-secret.yml
+k8s-authapi-secret.yml
+*secret.yml
