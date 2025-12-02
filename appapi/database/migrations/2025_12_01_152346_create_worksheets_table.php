@@ -19,9 +19,11 @@ class CreateWorksheetsTable extends Migration
             $table->bigInteger('os_id');
             $table->string('os_code')->nullable();
 
+            $table->string('sheet_code')->nullable();
+            $table->integer('sheet_type')->default(0); // 0=header, 1=item
+            $table->integer('sheetheader_id')->nullable();
             $table->integer('sheet_status')->nullable();
             $table->date('sheet_dt')->nullable();
-            $table->string('sheet_code')->nullable();
 
             $table->string('sheet_PO')->nullable();
             $table->string('sheet_SPK')->nullable();
