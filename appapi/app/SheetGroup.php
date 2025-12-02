@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class SheetGroup extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'projects';
+    protected $table = 'sheetgroups';
 
     /**
      * The attributes that should be mutated to dates.
@@ -29,17 +29,20 @@ class Project extends Model
      * @var array
      */
     protected $fillable = [
-        'project_code',
-        'project_name',
-        'project_description',
+        'sheetgroup_code',
+        'sheetgroup_name',
+        'sheetgroup_description',
+        'sheetgroup_type',
         'is_active',
+        'display_order',
+        'sheetgroup_notes',
     ];
 
     /**
-     * Worksheets in this project.
+     * Worksheets in this sheet group.
      */
     public function worksheets()
     {
-        return $this->hasMany('App\Worksheet', 'project_id');
+        return $this->hasMany('App\Worksheet', 'sheetgroup_id');
     }
 }

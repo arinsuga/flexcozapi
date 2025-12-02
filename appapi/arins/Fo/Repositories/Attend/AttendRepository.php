@@ -9,7 +9,6 @@ class AttendRepository extends EloquentRepository implements AttendRepositoryInt
 {
     protected $attend;
 
-
     public function getAttendanceByUserIdAndDate($parUserId, $parAttend_dt = null)
     {
 

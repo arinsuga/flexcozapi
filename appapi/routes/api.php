@@ -63,3 +63,36 @@ Route::post('absen/post-history-by-userid-checkpointdate','Absen\AbsenController
 
 Route::post('absen/checkin','Absen\AbsenController@checkin')->name('absen.checkin.post');
 Route::post('absen/checkout','Absen\AbsenController@checkout')->name('absen.checkout.post');
+
+// Projects API
+Route::apiResource('projects', 'ProjectController');
+
+// Contracts API
+Route::apiResource('contracts', 'ContractController');
+
+// Contract Sheets API
+Route::apiResource('contractsheets', 'ContractSheetController');
+Route::get('contracts/{contractId}/sheets', 'ContractSheetController@getByContract')->name('contractsheets.by.contract');
+
+// Worksheets API
+Route::apiResource('worksheets', 'WorksheetController');
+Route::get('projects/{projectId}/worksheets', 'WorksheetController@getByProject')->name('worksheets.by.project');
+Route::get('sheetgroups/{sheetGroupId}/worksheets', 'WorksheetController@getBySheetGroup')->name('worksheets.by.sheetgroup');
+Route::get('vendors/{vendorId}/worksheets', 'WorksheetController@getByVendor')->name('worksheets.by.vendor');
+
+// Sheet Groups API
+Route::apiResource('sheetgroups', 'SheetGroupController');
+Route::get('sheetgroups/type/{type}', 'SheetGroupController@getByType')->name('sheetgroups.by.type');
+
+// Vendors API
+Route::apiResource('vendors', 'VendorController');
+Route::get('vendortypes/{vendorTypeId}/vendors', 'VendorController@getByType')->name('vendors.by.type');
+
+// Vendor Types API
+Route::apiResource('vendortypes', 'VendorTypeController');
+
+// Units of Measure API
+Route::apiResource('uoms', 'UomController');
+
+// Reference Types API
+Route::apiResource('refftypes', 'RefftypeController');

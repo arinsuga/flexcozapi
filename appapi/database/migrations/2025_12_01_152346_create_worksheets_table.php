@@ -25,8 +25,8 @@ class CreateWorksheetsTable extends Migration
             $table->integer('sheet_status')->nullable();
             $table->date('sheet_dt')->nullable();
 
-            $table->string('sheet_PO')->nullable();
-            $table->string('sheet_SPK')->nullable();
+            $table->string('sheet_refftypeid')->nullable();
+            $table->string('sheet_reffno')->nullable();
 
             $table->string('sheet_name')->nullable();
             $table->string('sheet_description')->nullable();
@@ -57,9 +57,9 @@ class CreateWorksheetsTable extends Migration
 
             $table->bigInteger('project_id');
             $table->bigInteger('contract_id');
-            $table->bigInteger('sheettype_id');
+            $table->bigInteger('sheetgroup_id');
 
-            $table->bigInteger('sheettype_seqno')->nullable();
+            $table->bigInteger('sheetgroup_seqno')->nullable();
             $table->bigInteger('sheet_seqno')->nullable();
             $table->timestamps();
         });

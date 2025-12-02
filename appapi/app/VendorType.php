@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class VendorType extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'projects';
+    protected $table = 'vendortypes';
 
     /**
      * The attributes that should be mutated to dates.
@@ -29,17 +29,18 @@ class Project extends Model
      * @var array
      */
     protected $fillable = [
-        'project_code',
-        'project_name',
-        'project_description',
+        'vendortype_code',
+        'vendortype_name',
+        'vendortype_description',
         'is_active',
+        'display_order',
     ];
 
     /**
-     * Worksheets in this project.
+     * Vendors of this type.
      */
-    public function worksheets()
+    public function vendors()
     {
-        return $this->hasMany('App\Worksheet', 'project_id');
+        return $this->hasMany('App\Vendor', 'vendortype_id');
     }
 }

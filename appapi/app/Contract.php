@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class Contract extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'projects';
+    protected $table = 'contracts';
 
     /**
      * The attributes that should be mutated to dates.
@@ -29,17 +29,17 @@ class Project extends Model
      * @var array
      */
     protected $fillable = [
-        'project_code',
-        'project_name',
-        'project_description',
+        'contract_code',
+        'contract_name',
+        'contract_description',
         'is_active',
     ];
 
     /**
-     * Worksheets in this project.
+     * Worksheets in this contract.
      */
     public function worksheets()
     {
-        return $this->hasMany('App\Worksheet', 'project_id');
+        return $this->hasMany('App\Worksheet', 'contract_id');
     }
 }
