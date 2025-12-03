@@ -8,40 +8,7 @@ use App\Repositories\Data\EloquentRepository;
 
 class VendorRepository extends EloquentRepository implements VendorRepositoryInterface
 {
-    public function __construct(Vendor $model)
-    {
-        $this->data = $model;
-    }
-
-    public function all()
-    {
-        return $this->data->all();
-    }
-
-    public function find($id)
-    {
-        return $this->data->find($id);
-    }
-
-    public function create(array $data)
-    {
-        return $this->data->create($data);
-    }
-
-    public function update($id, array $data)
-    {
-        $model = $this->data->find($id);
-        if ($model) {
-            $model->update($data);
-            return $model;
-        }
-        return null;
-    }
-
-    public function delete($id)
-    {
-        return $this->data->destroy($id);
-    }
+    protected $vendor;
 
     public function getVendorsByType($vendorTypeId)
     {
