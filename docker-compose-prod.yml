@@ -10,22 +10,31 @@ services:
       DB_DATABASE: ${DB_DATABASE}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
-    # volumes:
-    #   - ./authapi:/var/www/html
+    networks:
+      - auth_net
+    depends_on:
+      - db
+
+  appapi-service:
+    image: sugaprivate/appapidev:latest
+    environment:
+      APP_ENV: ${APP_ENV}
+      APP_URL: ${APP_URL}
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE_APPAPI}
+      DB_USERNAME: ${DB_USERNAME_APPAPI}
+      DB_PASSWORD: ${DB_PASSWORD_APPAPI}
     networks:
       - auth_net
     depends_on:
       - db
 
   nginx:
-    # image: nginx:alpine
     image: sugaprivate/nginx-compose:latest
     container_name: nginx
     ports:
       - "80:80"
-    # volumes:
-    #   - ./authapi:/var/www/html
-    #   - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - authapi-service
     networks:

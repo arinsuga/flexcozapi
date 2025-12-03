@@ -12,6 +12,9 @@
         <testsuite name="Converter">
             <directory suffix="Test.php">./tests/Converter</directory>
         </testsuite>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

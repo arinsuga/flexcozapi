@@ -23,7 +23,16 @@ class DatabaseSeeder extends Seeder
         $this->call('AppUserTableSeeder');
         $this->call('RoleUserTableSeeder');
         
-        // factory(App\User::class, 5)->create();
+        $this->call('ProjectsTableSeeder');
+        $this->call('RefftypesTableSeeder');
+        $this->call('SheetgroupsTableSeeder');
+        $this->call('UomsTableSeeder');
+        $this->call('VendortypesTableSeeder');
+        $this->call('VendorsTableSeeder');
+
+
+
+        
         // $this->call('UsersTableSeeder');
         // $this->call('AppsTableSeeder');
         // $this->call('AppUserTableSeeder');

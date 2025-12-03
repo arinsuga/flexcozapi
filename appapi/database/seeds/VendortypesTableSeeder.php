@@ -85,4 +85,3 @@ class VendortypesTableSeeder extends Seeder
         DB::table('vendortypes')->insert($vendortypes);
     }
 }
-use Illuminate\Support\Facades\DB;

@@ -1,0 +1,220 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Repositories\Contracts\ContractSheetRepositoryInterface;
+use Mockery;
+
+class ContractSheetControllerTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected $repository;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->repository = Mockery::mock(ContractSheetRepositoryInterface::class);
+        $this->app->instance(ContractSheetRepositoryInterface::class, $this->repository);
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
+    /** @test */
+    public function it_returns_list_of_all_contract_sheets()
+    {
+        $contractSheets = [
+            ['id' => 1, 'contract_id' => 1],
+            ['id' => 2, 'contract_id' => 1],
+        ];
+
+        $this->repository
+            ->shouldReceive('all')
+            ->once()
+            ->andReturn($contractSheets);
+
+        $response = $this->withoutMiddleware()
+            ->getJson('/api/contractsheets');
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $contractSheets]);
+    }
+
+    /** @test */
+    public function it_returns_a_single_contract_sheet()
+    {
+        $contractSheet = ['id' => 1, 'contract_id' => 1];
+
+        $this->repository
+            ->shouldReceive('find')
+            ->with(1)
+            ->once()
+            ->andReturn($contractSheet);
+
+        $response = $this->withoutMiddleware()
+            ->getJson('/api/contractsheets/1');
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $contractSheet]);
+    }
+
+    /** @test */
+    public function it_returns_404_when_contract_sheet_not_found()
+    {
+        $this->repository
+            ->shouldReceive('find')
+            ->with(999)
+            ->once()
+            ->andReturn(null);
+
+        $response = $this->withoutMiddleware()
+            ->getJson('/api/contractsheets/999');
+
+        $response->assertStatus(404)
+            ->assertJson(['error' => 'Contract sheet not found']);
+    }
+
+    /** @test */
+    public function it_returns_contract_sheets_by_contract()
+    {
+        $contractSheets = [
+            ['id' => 1, 'contract_id' => 1],
+            ['id' => 2, 'contract_id' => 1],
+        ];
+
+        $this->repository
+            ->shouldReceive('getContractSheetsByContract')
+            ->with(1)
+            ->once()
+            ->andReturn($contractSheets);
+
+        $response = $this->withoutMiddleware()
+            ->getJson('/api/contracts/1/sheets');
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $contractSheets]);
+    }
+
+    /** @test */
+    public function it_creates_a_new_contract_sheet()
+    {
+        $contractSheetData = [
+            'contract_id' => 1,
+        ];
+
+        $createdContractSheet = array_merge(['id' => 3], $contractSheetData);
+
+        $this->repository
+            ->shouldReceive('create')
+            ->with($contractSheetData)
+            ->once()
+            ->andReturn($createdContractSheet);
+
+        $response = $this->withoutMiddleware()
+            ->postJson('/api/contractsheets', $contractSheetData);
+
+        $response->assertStatus(201)
+            ->assertJson(['data' => $createdContractSheet]);
+    }
+
+    /** @test */
+    public function it_validates_required_fields_when_creating_contract_sheet()
+    {
+        $response = $this->withoutMiddleware()
+            ->postJson('/api/contractsheets', []);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['contract_id']);
+    }
+
+    /** @test */
+    public function it_updates_an_existing_contract_sheet()
+    {
+        $updateData = [
+            'contract_id' => 2,
+        ];
+
+        $existingContractSheet = ['id' => 1, 'contract_id' => 1];
+        $updatedContractSheet = array_merge($existingContractSheet, $updateData);
+
+        $this->repository
+            ->shouldReceive('find')
+            ->with(1)
+            ->once()
+            ->andReturn($existingContractSheet);
+
+        $this->repository
+            ->shouldReceive('update')
+            ->with(1, $updateData)
+            ->once()
+            ->andReturn($updatedContractSheet);
+
+        $response = $this->withoutMiddleware()
+            ->putJson('/api/contractsheets/1', $updateData);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $updatedContractSheet]);
+    }
+
+    /** @test */
+    public function it_returns_404_when_updating_non_existent_contract_sheet()
+    {
+        $this->repository
+            ->shouldReceive('find')
+            ->with(999)
+            ->once()
+            ->andReturn(null);
+
+        $response = $this->withoutMiddleware()
+            ->putJson('/api/contractsheets/999', ['contract_id' => 1]);
+
+        $response->assertStatus(404)
+            ->assertJson(['error' => 'Contract sheet not found']);
+    }
+
+    /** @test */
+    public function it_deletes_a_contract_sheet()
+    {
+        $contractSheet = ['id' => 1, 'contract_id' => 1];
+
+        $this->repository
+            ->shouldReceive('find')
+            ->with(1)
+            ->once()
+            ->andReturn($contractSheet);
+
+        $this->repository
+            ->shouldReceive('delete')
+            ->with(1)
+            ->once()
+            ->andReturn(true);
+
+        $response = $this->withoutMiddleware()
+            ->deleteJson('/api/contractsheets/1');
+
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'Contract sheet deleted successfully']);
+    }
+
+    /** @test */
+    public function it_returns_404_when_deleting_non_existent_contract_sheet()
+    {
+        $this->repository
+            ->shouldReceive('find')
+            ->with(999)
+            ->once()
+            ->andReturn(null);
+
+        $response = $this->withoutMiddleware()
+            ->deleteJson('/api/contractsheets/999');
+
+        $response->assertStatus(404)
+            ->assertJson(['error' => 'Contract sheet not found']);
+    }
+}

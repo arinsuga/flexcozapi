@@ -11,7 +11,7 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./authapi:/var/www/html:cached
+      - ./authapi:/var/www/html/authapi:cached
     networks:
       - auth_net
     depends_on:
@@ -29,7 +29,7 @@ services:
       DB_USERNAME: ${DB_USERNAME_APPAPI}
       DB_PASSWORD: ${DB_PASSWORD_APPAPI}
     volumes:
-      - ./appapi:/var/www/html:cached
+      - ./appapi:/var/www/html/appapi:cached
     networks:
       - auth_net
     depends_on:
@@ -83,8 +83,8 @@ services:
     environment:
       PMA_HOST: db
       PMA_PORT:  ${DB_PORT}
-      PMA_USER: ${DB_USERNAME}
-      PMA_PASSWORD: ${DB_PASSWORD}
+      PMA_USER: ${DB_ROOT_USERNAME}
+      PMA_PASSWORD: ${DB_ROOT_PASSWORD}
     networks:
       - auth_net
     depends_on:
