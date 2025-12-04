@@ -13,7 +13,7 @@ class CreateContractsheetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contractsheet', function (Blueprint $table) {
+        Schema::create('contractsheets', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateContractsheetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contractsheet');
+        Schema::dropIfExists('contractsheets');
     }
 }

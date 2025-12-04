@@ -31,6 +31,7 @@ class CreateContractsTable extends Migration
             $table->decimal('contract_payment', 15, 2)->nullable();
             $table->date('contract_payment_dt')->nullable();
             $table->string('contract_payment_status')->nullable();
+            $table->boolean('is_active')->default(1); // Active/inactive flag
             $table->timestamps();
 
         });
