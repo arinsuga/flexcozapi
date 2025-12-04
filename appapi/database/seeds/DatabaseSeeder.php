@@ -11,17 +11,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
 
-		$this->call('UsersTableSeeder');
-        $this->call('UsersHRDTableSeeder');
-        $this->call('UsersCheckpointTableSeeder');
-        $this->call('UsersCostControlTableSeeder');
+		/** uncomment if you want integrated authentication */
+        // $this->call('UsersTableSeeder');
+        // $this->call('UsersHRDTableSeeder');
+        // $this->call('UsersCheckpointTableSeeder');
+        // $this->call('UsersCostControlTableSeeder');
 
-        $this->call('AppsTableSeeder');
-        $this->call('RolesTableSeeder');
-        $this->call('AppUserTableSeeder');
-        $this->call('RoleUserTableSeeder');
+		/** uncomment if you want integrated authentication */
+        // $this->call('AppsTableSeeder');
+        // $this->call('RolesTableSeeder');
+        // $this->call('AppUserTableSeeder');
+        // $this->call('RoleUserTableSeeder');
         
         $this->call('ProjectsTableSeeder');
         $this->call('ContractsTableSeeder');
