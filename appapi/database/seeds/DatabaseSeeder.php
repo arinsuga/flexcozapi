@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call('RoleUserTableSeeder');
         
         $this->call('ProjectsTableSeeder');
+        $this->call('ContractsTableSeeder');
         $this->call('RefftypesTableSeeder');
         $this->call('SheetgroupsTableSeeder');
         $this->call('UomsTableSeeder');

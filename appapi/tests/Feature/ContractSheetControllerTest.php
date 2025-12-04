@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Repositories\Contracts\ContractSheetRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 use Mockery;
 
 class ContractSheetControllerTest extends TestCase
@@ -16,6 +17,35 @@ class ContractSheetControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        
+        // Create a project record for foreign key validation
+        DB::table('projects')->insert([
+            'id' => 1,
+            'project_name' => 'Test Project',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
+        // Create a contract record for foreign key validation
+        DB::table('contracts')->insert([
+            'id' => 1,
+            'project_id' => 1,
+            'contract_name' => 'Test Contract',
+            'contract_progress' => 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
+        // Create another contract for update tests
+        DB::table('contracts')->insert([
+            'id' => 2,
+            'project_id' => 1,
+            'contract_name' => 'Test Contract 2',
+            'contract_progress' => 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         $this->repository = Mockery::mock(ContractSheetRepositoryInterface::class);
         $this->app->instance(ContractSheetRepositoryInterface::class, $this->repository);
     }
@@ -40,7 +70,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn($contractSheets);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/contractsheets');
+            ->getJson('/contractsheets');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $contractSheets]);
@@ -58,7 +88,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn($contractSheet);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/contractsheets/1');
+            ->getJson('/contractsheets/1');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $contractSheet]);
@@ -74,7 +104,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/contractsheets/999');
+            ->getJson('/contractsheets/999');
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Contract sheet not found']);
@@ -95,7 +125,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn($contractSheets);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/contracts/1/sheets');
+            ->getJson('/contracts/1/sheets');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $contractSheets]);
@@ -117,7 +147,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn($createdContractSheet);
 
         $response = $this->withoutMiddleware()
-            ->postJson('/api/contractsheets', $contractSheetData);
+            ->postJson('/contractsheets', $contractSheetData);
 
         $response->assertStatus(201)
             ->assertJson(['data' => $createdContractSheet]);
@@ -127,7 +157,7 @@ class ContractSheetControllerTest extends TestCase
     public function it_validates_required_fields_when_creating_contract_sheet()
     {
         $response = $this->withoutMiddleware()
-            ->postJson('/api/contractsheets', []);
+            ->postJson('/contractsheets', []);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['contract_id']);
@@ -156,7 +186,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn($updatedContractSheet);
 
         $response = $this->withoutMiddleware()
-            ->putJson('/api/contractsheets/1', $updateData);
+            ->putJson('/contractsheets/1', $updateData);
 
         $response->assertStatus(200)
             ->assertJson(['data' => $updatedContractSheet]);
@@ -172,7 +202,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->putJson('/api/contractsheets/999', ['contract_id' => 1]);
+            ->putJson('/contractsheets/999', ['contract_id' => 1]);
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Contract sheet not found']);
@@ -196,7 +226,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn(true);
 
         $response = $this->withoutMiddleware()
-            ->deleteJson('/api/contractsheets/1');
+            ->deleteJson('/contractsheets/1');
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Contract sheet deleted successfully']);
@@ -212,7 +242,7 @@ class ContractSheetControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->deleteJson('/api/contractsheets/999');
+            ->deleteJson('/contractsheets/999');
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Contract sheet not found']);

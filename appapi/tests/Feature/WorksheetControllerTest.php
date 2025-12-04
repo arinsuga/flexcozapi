@@ -40,7 +40,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn($worksheets);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/worksheets');
+            ->getJson('/worksheets');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $worksheets]);
@@ -58,7 +58,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn($worksheet);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/worksheets/1');
+            ->getJson('/worksheets/1');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $worksheet]);
@@ -74,7 +74,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/worksheets/999');
+            ->getJson('/worksheets/999');
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Worksheet not found']);
@@ -95,7 +95,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn($worksheets);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/projects/1/worksheets');
+            ->getJson('/projects/1/worksheets');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $worksheets]);
@@ -116,7 +116,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn($worksheets);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/sheetgroups/1/worksheets');
+            ->getJson('/sheetgroups/1/worksheets');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $worksheets]);
@@ -137,7 +137,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn($worksheets);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/vendors/1/worksheets');
+            ->getJson('/vendors/1/worksheets');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $worksheets]);
@@ -162,7 +162,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn($createdWorksheet);
 
         $response = $this->withoutMiddleware()
-            ->postJson('/api/worksheets', $worksheetData);
+            ->postJson('/worksheets', $worksheetData);
 
         $response->assertStatus(201)
             ->assertJson(['data' => $createdWorksheet]);
@@ -172,7 +172,7 @@ class WorksheetControllerTest extends TestCase
     public function it_validates_required_fields_when_creating_worksheet()
     {
         $response = $this->withoutMiddleware()
-            ->postJson('/api/worksheets', []);
+            ->postJson('/worksheets', []);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['sheet_code', 'project_id', 'sheetgroup_id']);
@@ -182,7 +182,7 @@ class WorksheetControllerTest extends TestCase
     public function it_validates_sheet_type_values()
     {
         $response = $this->withoutMiddleware()
-            ->postJson('/api/worksheets', [
+            ->postJson('/worksheets', [
                 'sheet_code' => 'WS003',
                 'sheet_type' => 5, // Invalid value
                 'project_id' => 1,
@@ -217,7 +217,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn($updatedWorksheet);
 
         $response = $this->withoutMiddleware()
-            ->putJson('/api/worksheets/1', $updateData);
+            ->putJson('/worksheets/1', $updateData);
 
         $response->assertStatus(200)
             ->assertJson(['data' => $updatedWorksheet]);
@@ -233,7 +233,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->putJson('/api/worksheets/999', ['sheet_code' => 'TEST']);
+            ->putJson('/worksheets/999', ['sheet_code' => 'TEST']);
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Worksheet not found']);
@@ -257,7 +257,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn(true);
 
         $response = $this->withoutMiddleware()
-            ->deleteJson('/api/worksheets/1');
+            ->deleteJson('/worksheets/1');
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Worksheet deleted successfully']);
@@ -273,7 +273,7 @@ class WorksheetControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->deleteJson('/api/worksheets/999');
+            ->deleteJson('/worksheets/999');
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Worksheet not found']);
