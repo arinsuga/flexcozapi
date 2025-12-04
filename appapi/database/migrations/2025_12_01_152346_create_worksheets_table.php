@@ -15,6 +15,9 @@ class CreateWorksheetsTable extends Migration
     {
         Schema::create('worksheets', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('sheetgroup_id');
+            $table->bigInteger('project_id');
+            $table->bigInteger('contract_id');
             $table->bigInteger('contractsheet_id');
             $table->bigInteger('os_id');
             $table->string('os_code')->nullable();
@@ -55,9 +58,6 @@ class CreateWorksheetsTable extends Migration
             $table->string('vendortype_name')->nullable();
             
 
-            $table->bigInteger('project_id');
-            $table->bigInteger('contract_id');
-            $table->bigInteger('sheetgroup_id');
 
             $table->bigInteger('sheetgroup_seqno')->nullable();
             $table->bigInteger('sheet_seqno')->nullable();
