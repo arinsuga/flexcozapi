@@ -16,7 +16,6 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('project_code')->nullable();
             $table->string('project_name');
             $table->string('project_description')->nullable();
             $table->string('project_owner')->nullable();
@@ -28,6 +27,7 @@ class CreateProjectsTable extends Migration
             $table->string('project_address')->nullable();
             $table->string('project_latitude')->nullable();
             $table->string('project_longitude')->nullable();
+            $table->boolean('is_active')->default(1); // Active/inactive flag
             $table->timestamps();
         });
     }

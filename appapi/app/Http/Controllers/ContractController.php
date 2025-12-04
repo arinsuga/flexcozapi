@@ -35,7 +35,7 @@ class ContractController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'contract_code' => 'required|unique:contracts,contract_code',
+            'contract_number' => 'required|unique:contracts,contract_number',
             'contract_name' => 'required|string',
             'is_active' => 'boolean',
         ]);
@@ -53,7 +53,7 @@ class ContractController extends Controller
         }
 
         $validated = $request->validate([
-            'contract_code' => 'unique:contracts,contract_code,' . $id,
+            'contract_number' => 'unique:contracts,contract_number,' . $id,
             'contract_name' => 'string',
             'is_active' => 'boolean',
         ]);

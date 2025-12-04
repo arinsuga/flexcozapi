@@ -35,7 +35,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'project_code' => 'required|unique:projects,project_code',
+            'project_number' => 'required|unique:projects,project_number',
             'project_name' => 'required|string',
             'is_active' => 'boolean',
         ]);
@@ -53,7 +53,7 @@ class ProjectController extends Controller
         }
 
         $validated = $request->validate([
-            'project_code' => 'unique:projects,project_code,' . $id,
+            'project_number' => 'unique:projects,project_number,' . $id,
             'project_name' => 'string',
             'is_active' => 'boolean',
         ]);

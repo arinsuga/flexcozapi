@@ -50,7 +50,7 @@ class VendorControllerTest extends TestCase
             ->andReturn($vendors);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/vendors');
+            ->getJson('/vendors');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $vendors]);
@@ -68,7 +68,7 @@ class VendorControllerTest extends TestCase
             ->andReturn($vendor);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/vendors/1');
+            ->getJson('/vendors/1');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $vendor]);
@@ -84,7 +84,7 @@ class VendorControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/vendors/999');
+            ->getJson('/vendors/999');
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Vendor not found']);
@@ -105,7 +105,7 @@ class VendorControllerTest extends TestCase
             ->andReturn($vendors);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/vendortypes/1/vendors');
+            ->getJson('/vendortypes/1/vendors');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $vendors]);
@@ -130,7 +130,7 @@ class VendorControllerTest extends TestCase
             ->andReturn($createdVendor);
 
         $response = $this->withoutMiddleware()
-            ->postJson('/api/vendors', $vendorData);
+            ->postJson('/vendors', $vendorData);
 
         $response->assertStatus(201)
             ->assertJson(['data' => $createdVendor]);
@@ -140,7 +140,7 @@ class VendorControllerTest extends TestCase
     public function it_validates_required_fields_when_creating_vendor()
     {
         $response = $this->withoutMiddleware()
-            ->postJson('/api/vendors', []);
+            ->postJson('/vendors', []);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['vendor_code', 'vendor_name', 'vendortype_id']);
@@ -170,7 +170,7 @@ class VendorControllerTest extends TestCase
             ->andReturn($updatedVendor);
 
         $response = $this->withoutMiddleware()
-            ->putJson('/api/vendors/1', $updateData);
+            ->putJson('/vendors/1', $updateData);
 
         $response->assertStatus(200)
             ->assertJson(['data' => $updatedVendor]);
@@ -186,7 +186,7 @@ class VendorControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->putJson('/api/vendors/999', ['vendor_name' => 'Test']);
+            ->putJson('/vendors/999', ['vendor_name' => 'Test']);
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Vendor not found']);
@@ -210,7 +210,7 @@ class VendorControllerTest extends TestCase
             ->andReturn(true);
 
         $response = $this->withoutMiddleware()
-            ->deleteJson('/api/vendors/1');
+            ->deleteJson('/vendors/1');
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Vendor deleted successfully']);
@@ -226,7 +226,7 @@ class VendorControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->deleteJson('/api/vendors/999');
+            ->deleteJson('/vendors/999');
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Vendor not found']);

@@ -17,7 +17,7 @@ class ProjectRepository extends EloquentRepository implements ProjectRepositoryI
 
     public function getProjectByCode($code)
     {
-        return $this->data->where('project_code', $code)->first();
+        return $this->data->where('project_number', $code)->first();
     }
 
     public function getByProject($projectId)

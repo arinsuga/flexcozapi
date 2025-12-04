@@ -30,8 +30,8 @@ class ContractControllerTest extends TestCase
     public function it_returns_list_of_active_contracts()
     {
         $contracts = [
-            ['id' => 1, 'contract_code' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true],
-            ['id' => 2, 'contract_code' => 'CNT002', 'contract_name' => 'Contract 2', 'is_active' => true],
+            ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true],
+            ['id' => 2, 'contract_number' => 'CNT002', 'contract_name' => 'Contract 2', 'is_active' => true],
         ];
 
         $this->repository
@@ -40,7 +40,7 @@ class ContractControllerTest extends TestCase
             ->andReturn($contracts);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/contracts');
+            ->getJson('/contracts');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $contracts]);
@@ -49,7 +49,7 @@ class ContractControllerTest extends TestCase
     /** @test */
     public function it_returns_a_single_contract()
     {
-        $contract = ['id' => 1, 'contract_code' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true];
+        $contract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true];
 
         $this->repository
             ->shouldReceive('find')
@@ -58,7 +58,7 @@ class ContractControllerTest extends TestCase
             ->andReturn($contract);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/contracts/1');
+            ->getJson('/contracts/1');
 
         $response->assertStatus(200)
             ->assertJson(['data' => $contract]);
@@ -74,7 +74,7 @@ class ContractControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->getJson('/api/contracts/999');
+            ->getJson('/contracts/999');
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Contract not found']);
@@ -84,7 +84,7 @@ class ContractControllerTest extends TestCase
     public function it_creates_a_new_contract()
     {
         $contractData = [
-            'contract_code' => 'CNT003',
+            'contract_number' => 'CNT003',
             'contract_name' => 'New Contract',
             'is_active' => true,
         ];
@@ -98,7 +98,7 @@ class ContractControllerTest extends TestCase
             ->andReturn($createdContract);
 
         $response = $this->withoutMiddleware()
-            ->postJson('/api/contracts', $contractData);
+            ->postJson('/contracts', $contractData);
 
         $response->assertStatus(201)
             ->assertJson(['data' => $createdContract]);
@@ -108,10 +108,10 @@ class ContractControllerTest extends TestCase
     public function it_validates_required_fields_when_creating_contract()
     {
         $response = $this->withoutMiddleware()
-            ->postJson('/api/contracts', []);
+            ->postJson('/contracts', []);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['contract_code', 'contract_name']);
+            ->assertJsonValidationErrors(['contract_number', 'contract_name']);
     }
 
     /** @test */
@@ -122,7 +122,7 @@ class ContractControllerTest extends TestCase
             'is_active' => false,
         ];
 
-        $existingContract = ['id' => 1, 'contract_code' => 'CNT001', 'contract_name' => 'Old Name', 'is_active' => true];
+        $existingContract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Old Name', 'is_active' => true];
         $updatedContract = array_merge($existingContract, $updateData);
 
         $this->repository
@@ -138,7 +138,7 @@ class ContractControllerTest extends TestCase
             ->andReturn($updatedContract);
 
         $response = $this->withoutMiddleware()
-            ->putJson('/api/contracts/1', $updateData);
+            ->putJson('/contracts/1', $updateData);
 
         $response->assertStatus(200)
             ->assertJson(['data' => $updatedContract]);
@@ -154,7 +154,7 @@ class ContractControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->putJson('/api/contracts/999', ['contract_name' => 'Test']);
+            ->putJson('/contracts/999', ['contract_name' => 'Test']);
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Contract not found']);
@@ -163,7 +163,7 @@ class ContractControllerTest extends TestCase
     /** @test */
     public function it_deletes_a_contract()
     {
-        $contract = ['id' => 1, 'contract_code' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true];
+        $contract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true];
 
         $this->repository
             ->shouldReceive('find')
@@ -178,7 +178,7 @@ class ContractControllerTest extends TestCase
             ->andReturn(true);
 
         $response = $this->withoutMiddleware()
-            ->deleteJson('/api/contracts/1');
+            ->deleteJson('/contracts/1');
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Contract deleted successfully']);
@@ -194,7 +194,7 @@ class ContractControllerTest extends TestCase
             ->andReturn(null);
 
         $response = $this->withoutMiddleware()
-            ->deleteJson('/api/contracts/999');
+            ->deleteJson('/contracts/999');
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Contract not found']);
