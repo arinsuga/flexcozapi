@@ -15,12 +15,12 @@ class CreateWorksheetsTable extends Migration
     {
         Schema::create('worksheets', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('sheetgroup_id');
             $table->bigInteger('project_id');
             $table->bigInteger('contract_id');
             $table->bigInteger('contractsheet_id');
             $table->bigInteger('os_id');
             $table->string('os_code')->nullable();
+            $table->bigInteger('sheetgroup_id');
 
             $table->string('sheet_code')->nullable();
             $table->integer('sheet_type')->default(0); // 0=header, 1=item
