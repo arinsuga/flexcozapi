@@ -30,8 +30,8 @@ class ContractControllerTest extends TestCase
     public function it_returns_list_of_active_contracts()
     {
         $contracts = [
-            ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true],
-            ['id' => 2, 'contract_number' => 'CNT002', 'contract_name' => 'Contract 2', 'is_active' => true],
+            ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1'],
+            ['id' => 2, 'contract_number' => 'CNT002', 'contract_name' => 'Contract 2'],
         ];
 
         $this->repository
@@ -49,7 +49,7 @@ class ContractControllerTest extends TestCase
     /** @test */
     public function it_returns_a_single_contract()
     {
-        $contract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true];
+        $contract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1'];
 
         $this->repository
             ->shouldReceive('find')
@@ -86,7 +86,6 @@ class ContractControllerTest extends TestCase
         $contractData = [
             'contract_number' => 'CNT003',
             'contract_name' => 'New Contract',
-            'is_active' => true,
         ];
 
         $createdContract = array_merge(['id' => 3], $contractData);
@@ -119,10 +118,9 @@ class ContractControllerTest extends TestCase
     {
         $updateData = [
             'contract_name' => 'Updated Contract Name',
-            'is_active' => false,
         ];
 
-        $existingContract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Old Name', 'is_active' => true];
+        $existingContract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Old Name'];
         $updatedContract = array_merge($existingContract, $updateData);
 
         $this->repository
@@ -163,7 +161,7 @@ class ContractControllerTest extends TestCase
     /** @test */
     public function it_deletes_a_contract()
     {
-        $contract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1', 'is_active' => true];
+        $contract = ['id' => 1, 'contract_number' => 'CNT001', 'contract_name' => 'Contract 1'];
 
         $this->repository
             ->shouldReceive('find')

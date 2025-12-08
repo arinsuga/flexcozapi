@@ -57,11 +57,4 @@ class Vendor extends Model
         return $this->belongsTo('App\VendorType', 'vendortype_id');
     }
 
-    /**
-     * Worksheets created by this vendor.
-     */
-    public function worksheets()
-    {
-        return $this->hasMany('App\Worksheet', 'vendor_id');
-    }
 }

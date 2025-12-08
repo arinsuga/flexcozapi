@@ -37,7 +37,6 @@ class ContractController extends Controller
         $validated = $request->validate([
             'contract_number' => 'required|unique:contracts,contract_number',
             'contract_name' => 'required|string',
-            'is_active' => 'boolean',
         ]);
 
         $contract = $this->repository->create($validated);
@@ -55,7 +54,6 @@ class ContractController extends Controller
         $validated = $request->validate([
             'contract_number' => 'unique:contracts,contract_number,' . $id,
             'contract_name' => 'string',
-            'is_active' => 'boolean',
         ]);
 
         $updated = $this->repository->update($id, $validated);

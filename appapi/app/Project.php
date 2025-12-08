@@ -35,11 +35,4 @@ class Project extends Model
         'is_active',
     ];
 
-    /**
-     * Worksheets in this project.
-     */
-    public function worksheets()
-    {
-        return $this->hasMany('App\Worksheet', 'project_id');
-    }
 }

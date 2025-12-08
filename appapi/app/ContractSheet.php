@@ -16,7 +16,6 @@ class ContractSheet extends Model
      */
     protected $dates = [
         'sheet_dt',
-        'sheet_payment_dt',
         'created_at',
         'updated_at',
     ];
@@ -25,16 +24,28 @@ class ContractSheet extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
+        'project_id',
         'contract_id',
+        'sheet_dt',
+        'sheet_type',
+        'sheetgroup_id',
+        'sheetheader_id',
         'sheet_code',
         'sheet_name',
         'sheet_description',
-        'sheet_dt',
-        'sheet_type',
-        'sheet_payment_dt',
-        'sheet_payment_status',
         'sheet_notes',
-        'is_active',
+        'sheet_qty',
+        'sheet_price',
+        'sheet_grossamt',
+        'sheet_discountrate',
+        'sheet_discountvalue',
+        'sheet_taxrate',
+        'sheet_taxvalue',
+        'sheet_netamt',
+        'uom_id',
+        'uom_name',
+        'sheetgroup_seqno',
+        'sheet_seqno',
     ];
 
     /**
@@ -45,11 +56,4 @@ class ContractSheet extends Model
         return $this->belongsTo('App\Contract', 'contract_id');
     }
 
-    /**
-     * Get all worksheets for this contract sheet.
-     */
-    public function worksheets()
-    {
-        return $this->hasMany('App\Worksheet', 'contractsheet_id');
-    }
 }

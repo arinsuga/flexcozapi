@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 // Repository Contracts
 use App\Repositories\Contracts\ProjectRepositoryInterface;
 use App\Repositories\Contracts\ContractRepositoryInterface;
-use App\Repositories\Contracts\WorksheetRepositoryInterface;
 use App\Repositories\Contracts\SheetGroupRepositoryInterface;
 use App\Repositories\Contracts\VendorRepositoryInterface;
 use App\Repositories\Contracts\VendorTypeRepositoryInterface;
@@ -18,7 +17,6 @@ use App\Repositories\Contracts\ContractSheetRepositoryInterface;
 // Repository Implementations
 use App\Repositories\ProjectRepository;
 use App\Repositories\ContractRepository;
-use App\Repositories\WorksheetRepository;
 use App\Repositories\SheetGroupRepository;
 use App\Repositories\VendorRepository;
 use App\Repositories\VendorTypeRepository;
@@ -29,7 +27,6 @@ use App\Repositories\ContractSheetRepository;
 // Models
 use App\Project;
 use App\Contract;
-use App\Worksheet;
 use App\SheetGroup;
 use App\Vendor;
 use App\VendorType;
@@ -49,11 +46,6 @@ class RepositoryServiceProvider extends ServiceProvider
         // Contract Repository Binding
         $this->app->bind(ContractRepositoryInterface::class, function ($app) {
             return new ContractRepository(new Contract());
-        });
-
-        // Worksheet Repository Binding
-        $this->app->bind(WorksheetRepositoryInterface::class, function ($app) {
-            return new WorksheetRepository(new Worksheet());
         });
 
         // SheetGroup Repository Binding

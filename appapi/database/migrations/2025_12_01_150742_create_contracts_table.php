@@ -21,17 +21,16 @@ class CreateContractsTable extends Migration
             $table->string('contract_number')->nullable();
             $table->string('contract_pic')->nullable();
             $table->string('contract_status')->nullable();
-            $table->integer('contract_progress');
+            $table->decimal('contract_progress', 5, 2)->nullable();
 
             $table->date('contract_dt')->nullable();
             $table->date('contract_startdt')->nullable();
             $table->date('contract_enddt')->nullable();
 
+            $table->date('contract_payment_dt')->nullable();
             $table->decimal('contract_amount', 15, 2)->nullable();
             $table->decimal('contract_payment', 15, 2)->nullable();
-            $table->date('contract_payment_dt')->nullable();
             $table->string('contract_payment_status')->nullable();
-            $table->boolean('is_active')->default(1); // Active/inactive flag
             $table->timestamps();
 
         });

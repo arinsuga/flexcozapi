@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContractsheetsTable extends Migration
+class CreateOrdersheetsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,18 @@ class CreateContractsheetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contractsheets', function (Blueprint $table) {
+        Schema::create('ordersheets', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('project_id');
             $table->bigInteger('contract_id');
+            $table->bigInteger('contractsheets_id');
 
             $table->date('sheet_dt')->nullable();
             $table->integer('sheet_type')->default(0); // 0=header, 1=item
             $table->bigInteger('sheetgroup_id');
             $table->integer('sheetheader_id')->nullable();
             $table->string('sheet_code')->nullable();
-            
+
             $table->string('sheet_name')->nullable();
             $table->string('sheet_description')->nullable();
             $table->string('sheet_notes')->nullable();
@@ -40,6 +41,21 @@ class CreateContractsheetsTable extends Migration
             $table->string('uom_id')->nullable();
             $table->string('uom_name')->nullable();
 
+            $table->date('sheet_payment_dt')->nullable();
+            $table->string('sheet_payment_status')->nullable();
+
+            $table->bigInteger('vendortype_id')->nullable();
+            $table->string('vendortype_name')->nullable();
+            $table->bigInteger('vendor_id')->nullable();
+            $table->string('vendor_name')->nullable();
+            
+            $table->string('sheet_refftypeid')->nullable();
+            $table->string('sheet_reffno')->nullable();
+
+            $table->bigInteger('order_id');
+            $table->string('order_number')->nullable();
+            $table->date('order_dt')->nullable();
+
             $table->bigInteger('sheetgroup_seqno')->nullable();
             $table->bigInteger('sheet_seqno')->nullable();
             $table->timestamps();
@@ -53,6 +69,6 @@ class CreateContractsheetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contractsheets');
+        Schema::dropIfExists('ordersheets');
     }
 }

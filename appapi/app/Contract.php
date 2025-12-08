@@ -21,6 +21,10 @@ class Contract extends Model
     protected $dates = [
         'created_at',
         'updated_at',
+        'contract_dt',
+        'contract_startdt',
+        'contract_enddt',
+        'contract_payment_dt',
     ];
 
     /**
@@ -29,17 +33,28 @@ class Contract extends Model
      * @var array
      */
     protected $fillable = [
-        'contract_code',
+        'project_id',
         'contract_name',
         'contract_description',
-        'is_active',
+        'contract_number',
+        'contract_pic',
+        'contract_status',
+        'contract_progress',
+        'contract_dt',
+        'contract_startdt',
+        'contract_enddt',
+        'contract_amount',
+        'contract_payment',
+        'contract_payment_dt',
+        'contract_payment_status',
     ];
 
     /**
-     * Worksheets in this contract.
+     * Project that this contract belongs to.
      */
-    public function worksheets()
+    public function project()
     {
-        return $this->hasMany('App\Worksheet', 'contract_id');
+        return $this->belongsTo('App\Project', 'project_id');
     }
+
 }

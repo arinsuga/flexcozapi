@@ -38,11 +38,4 @@ class SheetGroup extends Model
         'sheetgroup_notes',
     ];
 
-    /**
-     * Worksheets in this sheet group.
-     */
-    public function worksheets()
-    {
-        return $this->hasMany('App\Worksheet', 'sheetgroup_id');
-    }
 }
