@@ -70,15 +70,20 @@ Route::apiResource('projects', 'ProjectController');
 // Contracts API
 Route::apiResource('contracts', 'ContractController');
 
+// Orders API
+Route::apiResource('orders', 'OrderController');
+Route::get('orders/project/{projectId}', 'OrderController@getByProject')->name('orders.by.project');
+Route::get('orders/contract/{contractId}', 'OrderController@getByContract')->name('orders.by.contract');
+
 // Contract Sheets API
 Route::apiResource('contractsheets', 'ContractSheetController');
 Route::get('contracts/{contractId}/sheets', 'ContractSheetController@getByContract')->name('contractsheets.by.contract');
 
-// Worksheets API
-Route::apiResource('worksheets', 'WorksheetController');
-Route::get('projects/{projectId}/worksheets', 'WorksheetController@getByProject')->name('worksheets.by.project');
-Route::get('sheetgroups/{sheetGroupId}/worksheets', 'WorksheetController@getBySheetGroup')->name('worksheets.by.sheetgroup');
-Route::get('vendors/{vendorId}/worksheets', 'WorksheetController@getByVendor')->name('worksheets.by.vendor');
+// Ordersheets API
+Route::apiResource('ordersheets', 'OrdersheetController');
+Route::get('orders/{orderId}/sheets', 'OrdersheetController@getByOrder')->name('ordersheets.by.order');
+Route::get('projects/{projectId}/ordersheets', 'OrdersheetController@getByProject')->name('ordersheets.by.project');
+Route::get('contracts/{contractId}/ordersheets', 'OrdersheetController@getByContract')->name('ordersheets.by.contract');
 
 // Sheet Groups API
 Route::apiResource('sheetgroups', 'SheetGroupController');

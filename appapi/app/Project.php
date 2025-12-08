@@ -35,4 +35,12 @@ class Project extends Model
         'is_active',
     ];
 
+    /**
+     * Orders that belong to this project.
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Order', 'project_id');
+    }
+
 }

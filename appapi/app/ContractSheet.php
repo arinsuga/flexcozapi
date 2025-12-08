@@ -56,4 +56,12 @@ class ContractSheet extends Model
         return $this->belongsTo('App\Contract', 'contract_id');
     }
 
+    /**
+     * Ordersheets that belong to this contractsheet.
+     */
+    public function ordersheets()
+    {
+        return $this->hasMany('App\Ordersheet', 'contractsheets_id');
+    }
+
 }

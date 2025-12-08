@@ -57,4 +57,12 @@ class Contract extends Model
         return $this->belongsTo('App\Project', 'project_id');
     }
 
+    /**
+     * Orders that belong to this contract.
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Order', 'contract_id');
+    }
+
 }

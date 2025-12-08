@@ -13,6 +13,8 @@ use App\Repositories\Contracts\VendorTypeRepositoryInterface;
 use App\Repositories\Contracts\UomRepositoryInterface;
 use App\Repositories\Contracts\RefftypeRepositoryInterface;
 use App\Repositories\Contracts\ContractSheetRepositoryInterface;
+use App\Repositories\Contracts\OrderRepositoryInterface;
+use App\Repositories\Contracts\OrdersheetRepositoryInterface;
 
 // Repository Implementations
 use App\Repositories\ProjectRepository;
@@ -23,6 +25,8 @@ use App\Repositories\VendorTypeRepository;
 use App\Repositories\UomRepository;
 use App\Repositories\RefftypeRepository;
 use App\Repositories\ContractSheetRepository;
+use App\Repositories\OrderRepository;
+use App\Repositories\OrdersheetRepository;
 
 // Models
 use App\Project;
@@ -33,6 +37,8 @@ use App\VendorType;
 use App\Uom;
 use App\Refftype;
 use App\ContractSheet;
+use App\Order;
+use App\Ordersheet;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -76,6 +82,16 @@ class RepositoryServiceProvider extends ServiceProvider
         // ContractSheet Repository Binding
         $this->app->bind(ContractSheetRepositoryInterface::class, function ($app) {
             return new ContractSheetRepository(new ContractSheet());
+        });
+
+        // Order Repository Binding
+        $this->app->bind(OrderRepositoryInterface::class, function ($app) {
+            return new OrderRepository(new Order());
+        });
+
+        // Ordersheet Repository Binding
+        $this->app->bind(OrdersheetRepositoryInterface::class, function ($app) {
+            return new OrdersheetRepository(new Ordersheet());
         });
     }
 
