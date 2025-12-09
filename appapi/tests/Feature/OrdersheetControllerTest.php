@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Repositories\Contracts\OrdersheetRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 use Mockery;
 
 class OrdersheetControllerTest extends TestCase
@@ -18,12 +19,74 @@ class OrdersheetControllerTest extends TestCase
         parent::setUp();
         $this->repository = Mockery::mock(OrdersheetRepositoryInterface::class);
         $this->app->instance(OrdersheetRepositoryInterface::class, $this->repository);
+        $this->createDependencies();
     }
 
     protected function tearDown(): void
     {
         Mockery::close();
         parent::tearDown();
+    }
+
+    private function createDependencies()
+    {
+        // 1. Project
+        DB::table('projects')->insert([
+            'id' => 1,
+            'project_name' => 'Project 1',
+        ]);
+
+        // 2. Contract (depends on Project)
+        DB::table('contracts')->insert([
+            'id' => 1,
+            'project_id' => 1,
+            'contract_name' => 'Contract 1',
+        ]);
+
+        // 3. Order (depends on Project, Contract)
+        DB::table('orders')->insert([
+            'id' => 1,
+            'project_id' => 1,
+            'contract_id' => 1,
+            'order_number' => 'ORD001',
+        ]);
+
+        // 4. SheetGroup
+        DB::table('sheetgroups')->insert([
+            'id' => 1,
+            'sheetgroup_code' => 'GRP1',
+            'sheetgroup_name' => 'Group 1',
+        ]);
+
+        // 5. ContractSheet (depends on Project, Contract, SheetGroup)
+        DB::table('contractsheets')->insert([
+            'id' => 1,
+            'project_id' => 1,
+            'contract_id' => 1,
+            'sheetgroup_id' => 1,
+        ]);
+
+        // 6. Uom
+        DB::table('uoms')->insert([
+            'id' => 1,
+            'uom_code' => 'PCS',
+            'uom_name' => 'Pieces',
+        ]);
+
+        // 7. VendorType
+        DB::table('vendortypes')->insert([
+            'id' => 1,
+            'vendortype_code' => 'SUPP',
+            'vendortype_name' => 'Supplier',
+        ]);
+
+        // 8. Vendor (depends on VendorType)
+        DB::table('vendors')->insert([
+            'id' => 1,
+            'vendortype_id' => 1,
+            'vendor_code' => 'VEN1',
+            'vendor_name' => 'Vendor 1',
+        ]);
     }
 
     /** @test */
