@@ -34,19 +34,20 @@ abstract class EloquentRepository implements DataRepositoryInterface
     public function create($parData)
     {
         //TODO Code create data here
-        return $this->data->all();
+        return ["TODO" => "Customize create data in current repository"];
     }
 
-    function update($parData)
+    function update($id, $data)
     {
         //TODO Code update data here
-        return $this->data->all();
+        return ["TODO" => "Customize update data in current repository"];
+
     }
 
     function delete($parId)
     {
         //TODO Code delete data here
-        return $this->data->all();
+        return ["TODO" => "Customize delete data in current repository"];
     }
 
 }
