@@ -47,7 +47,7 @@ class VendorController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $vendor = $this->repository->create($validated);
+        $vendor = $this->repository->create($request->all());
         return response()->json(['data' => $vendor], 201);
     }
 
@@ -66,7 +66,7 @@ class VendorController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $updated = $this->repository->update($id, $validated);
+        $updated = $this->repository->update($id, $request->all());
         return response()->json(['data' => $updated], 200);
     }
 

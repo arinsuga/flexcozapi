@@ -40,7 +40,7 @@ class ProjectController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $project = $this->repository->create($validated);
+        $project = $this->repository->create($request->all());
         return response()->json(['data' => $project], 201);
     }
 

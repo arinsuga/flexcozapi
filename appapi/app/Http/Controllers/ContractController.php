@@ -39,7 +39,7 @@ class ContractController extends Controller
             'contract_name' => 'required|string',
         ]);
 
-        $contract = $this->repository->create($validated);
+        $contract = $this->repository->create($request->all());
         return response()->json(['data' => $contract], 201);
     }
 
@@ -56,7 +56,7 @@ class ContractController extends Controller
             'contract_name' => 'string',
         ]);
 
-        $updated = $this->repository->update($id, $validated);
+        $updated = $this->repository->update($id, $request->all());
         return response()->json(['data' => $updated], 200);
     }
 

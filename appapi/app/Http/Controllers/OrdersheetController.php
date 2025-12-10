@@ -89,7 +89,7 @@ class OrdersheetController extends Controller
             'sheet_seqno' => 'nullable|integer',
         ]);
 
-        $ordersheet = $this->repository->create($validated);
+        $ordersheet = $this->repository->create($request->all());
         return response()->json(['data' => $ordersheet], 201);
     }
 
@@ -138,7 +138,7 @@ class OrdersheetController extends Controller
             'sheet_seqno' => 'nullable|integer',
         ]);
 
-        $updated = $this->repository->update($id, $validated);
+        $updated = $this->repository->update($id, $request->all());
         return response()->json(['data' => $updated], 200);
     }
 

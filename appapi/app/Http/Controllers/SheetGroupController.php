@@ -47,7 +47,7 @@ class SheetGroupController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $sheetgroup = $this->repository->create($validated);
+        $sheetgroup = $this->repository->create($request->all());
         return response()->json(['data' => $sheetgroup], 201);
     }
 
@@ -66,7 +66,7 @@ class SheetGroupController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $updated = $this->repository->update($id, $validated);
+        $updated = $this->repository->update($id, $request->all());
         return response()->json(['data' => $updated], 200);
     }
 

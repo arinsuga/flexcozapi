@@ -40,7 +40,7 @@ class RefftypeController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $refftype = $this->repository->create($validated);
+        $refftype = $this->repository->create($request->all());
         return response()->json(['data' => $refftype], 201);
     }
 
@@ -58,7 +58,7 @@ class RefftypeController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $updated = $this->repository->update($id, $validated);
+        $updated = $this->repository->update($id, $request->all());
         return response()->json(['data' => $updated], 200);
     }
 

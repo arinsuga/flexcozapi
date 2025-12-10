@@ -44,7 +44,7 @@ class OrderController extends Controller
             'order_status' => 'nullable|string',
         ]);
 
-        $order = $this->repository->create($validated);
+        $order = $this->repository->create($request->all());
         return response()->json(['data' => $order], 201);
     }
 
@@ -66,7 +66,7 @@ class OrderController extends Controller
             'order_status' => 'nullable|string',
         ]);
 
-        $updated = $this->repository->update($id, $validated);
+        $updated = $this->repository->update($id, $request->all());
         return response()->json(['data' => $updated], 200);
     }
 

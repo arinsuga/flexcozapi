@@ -44,7 +44,7 @@ class ContractSheetController extends Controller
             'contract_id' => 'required|exists:contracts,id',
         ]);
 
-        $contractsheet = $this->repository->create($validated);
+        $contractsheet = $this->repository->create($request->all());
         return response()->json(['data' => $contractsheet], 201);
     }
 
@@ -60,7 +60,7 @@ class ContractSheetController extends Controller
             'contract_id' => 'exists:contracts,id',
         ]);
 
-        $updated = $this->repository->update($id, $validated);
+        $updated = $this->repository->update($id, $request->all());
         return response()->json(['data' => $updated], 200);
     }
 
