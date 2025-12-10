@@ -58,7 +58,7 @@ class ProjectController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $updated = $this->repository->update($id, $validated);
+        $updated = $this->repository->update($id, $request->all());
         return response()->json(['data' => $updated], 200);
     }
 

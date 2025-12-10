@@ -25,24 +25,4 @@ class ProjectRepository extends EloquentRepository implements ProjectRepositoryI
         return $this->data->where('project_id', $projectId)->get();
     }
 
-    public function update($id, $data)
-    {
-        // $result = $this->data->find($id);
-        // if ($result) {
-        //     $result->update($data);
-        //     return $result->fresh();
-        // }
-        // return null;
-
-
-        $result = $this->data->find($id);
-        if ($result) {
-            $result->fill($data)->save();
-            return $result->fresh();
-        }
-        return null;
-
-
-    }
-
 }
