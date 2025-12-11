@@ -221,6 +221,25 @@ class UomsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            // General
+            [
+                'uom_code' => 'LOT',
+                'uom_name' => 'Lot',
+                'uom_description' => 'Satu lot',
+                'is_active' => 1,
+                'display_order' => 19,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'uom_code' => 'UNIT',
+                'uom_name' => 'Unit',
+                'uom_description' => 'Satu unit',
+                'is_active' => 1,
+                'display_order' => 20,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
 
         DB::table('uoms')->insert($uoms);

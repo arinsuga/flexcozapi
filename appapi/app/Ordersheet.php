@@ -37,6 +37,7 @@ class Ordersheet extends Model
         'contractsheets_id',
         'sheet_dt',
         'sheet_type',
+        'sheetgroup_type',
         'sheetgroup_id',
         'sheetheader_id',
         'sheet_code',
@@ -122,6 +123,14 @@ class Ordersheet extends Model
     public function vendor()
     {
         return $this->belongsTo('App\Vendor', 'vendor_id');
+    }
+
+    /**
+     * Uom that this ordersheet belongs to.
+     */
+    public function uom()
+    {
+        return $this->belongsTo('App\Uom', 'uom_id');
     }
 
 }

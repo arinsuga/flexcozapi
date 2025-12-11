@@ -36,6 +36,7 @@ class OrdersheetsTableSeeder extends Seeder
                     
                     'sheet_dt' => $order->order_dt,
                     'sheet_type' => 1, // 1 for Item
+                    'sheetgroup_type' => 0,
                     
                     // Default values for group/header
                     'sheetgroup_id' => 1, 
@@ -55,7 +56,7 @@ class OrdersheetsTableSeeder extends Seeder
                     'sheet_taxvalue' => $taxValue,
                     'sheet_netamt' => $net,
 
-                    'uom_id' => 'PCS',
+                    'uom_id' => 1, // PCS
                     'uom_name' => 'Pieces',
 
                     'sheet_payment_dt' => null,

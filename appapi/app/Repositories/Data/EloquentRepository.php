@@ -7,6 +7,7 @@ namespace App\Repositories\Data;
 abstract class EloquentRepository implements DataRepositoryInterface
 {
     protected $data, $data1;
+    protected $tableName;
 
     public function __construct($parData, $parData1 = null)
     {
@@ -39,6 +40,17 @@ abstract class EloquentRepository implements DataRepositoryInterface
         $result = $this->data->create($parData);
         return $result->fresh();
     }
+
+    public function bulkCreate($parData)
+    {
+        //TODO Code create data here
+        // return ["TODO" => "Customize create data in current repository"];
+
+        $result = $this->data->insert($parData);
+
+        return $result;
+    }
+
 
     function update($parId, $parData)
     {

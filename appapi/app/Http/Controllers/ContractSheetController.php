@@ -41,10 +41,33 @@ class ContractSheetController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'contract_id' => 'required|exists:contracts,id',
+            '*.project_id' => 'required|integer|exists:projects,id',
+            '*.contract_id' => 'required|integer|exists:contracts,id',
+            '*.sheet_dt' => 'nullable|date',
+            '*.sheet_type' => 'integer',
+            '*.sheetgroup_type' => 'required|integer|in:0,1',
+            '*.sheetgroup_id' => 'required|integer',
+            '*.sheetheader_id' => 'nullable|integer',
+            '*.sheet_code' => 'nullable|string|max:255',
+            '*.sheet_name' => 'nullable|string|max:255',
+            '*.sheet_description' => 'nullable|string|max:255',
+            '*.sheet_notes' => 'nullable|string|max:255',
+            '*.sheet_qty' => 'nullable|numeric',
+            '*.sheet_price' => 'nullable|numeric',
+            '*.sheet_grossamt' => 'nullable|numeric',
+            '*.sheet_discountrate' => 'nullable|numeric',
+            '*.sheet_discountvalue' => 'nullable|numeric',
+            '*.sheet_taxrate' => 'nullable|numeric',
+            '*.sheet_taxvalue' => 'nullable|numeric',
+            '*.sheet_netamt' => 'nullable|numeric',
+            '*.uom_id' => 'required|integer|exists:uoms,id',
+            '*.uom_name' => 'required|string|max:255',
+            '*.sheetgroup_seqno' => 'nullable|integer',
+            '*.sheet_seqno' => 'nullable|integer',
         ]);
 
-        $contractsheet = $this->repository->create($request->all());
+        // $contractsheet = $this->repository->create($request->all());
+        $contractsheet = $this->repository->bulkCreate($request->all());
         return response()->json(['data' => $contractsheet], 201);
     }
 
@@ -58,6 +81,7 @@ class ContractSheetController extends Controller
 
         $validated = $request->validate([
             'contract_id' => 'exists:contracts,id',
+            'sheetgroup_type' => 'integer|in:0,1',
         ]);
 
         $updated = $this->repository->update($id, $request->all());

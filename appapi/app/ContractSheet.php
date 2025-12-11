@@ -28,6 +28,7 @@ class ContractSheet extends Model
         'contract_id',
         'sheet_dt',
         'sheet_type',
+        'sheetgroup_type',
         'sheetgroup_id',
         'sheetheader_id',
         'sheet_code',
@@ -57,11 +58,27 @@ class ContractSheet extends Model
     }
 
     /**
+     * Get the sheet group associated with the contract sheet.
+     */
+    public function sheetGroup()
+    {
+        return $this->belongsTo('App\SheetGroup', 'sheetgroup_id');
+    }
+
+    /**
      * Ordersheets that belong to this contractsheet.
      */
     public function ordersheets()
     {
         return $this->hasMany('App\Ordersheet', 'contractsheets_id');
+    }
+
+    /**
+     * Get the uom associated with the contract sheet.
+     */
+    public function uom()
+    {
+        return $this->belongsTo('App\Uom', 'uom_id');
     }
 
 }

@@ -45,6 +45,15 @@ class ContractSheetControllerTest extends TestCase
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        // Create a uom record for foreign key validation
+        DB::table('uoms')->insert([
+            'id' => 1,
+            'uom_code' => 'PCS',
+            'uom_name' => 'Pieces',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
         
         $this->repository = Mockery::mock(ContractSheetRepositoryInterface::class);
         $this->app->instance(ContractSheetRepositoryInterface::class, $this->repository);
@@ -135,32 +144,53 @@ class ContractSheetControllerTest extends TestCase
     public function it_creates_a_new_contract_sheet()
     {
         $contractSheetData = [
+            'project_id' => 1,
             'contract_id' => 1,
+            'sheetgroup_id' => 1,
+            'sheetgroup_type' => 1,
+            'uom_id' => 1,
+            'uom_name' => 'Kilogram',
         ];
 
         $createdContractSheet = array_merge(['id' => 3], $contractSheetData);
-
+        // The controller wraps the result in an array for bulkCreate, or returns the collection/array of created items
+        // Based on controller: return response()->json(['data' => $contractsheet], 201);
+        // If bulkCreate returns the created items, we should expect that.
+        
         $this->repository
-            ->shouldReceive('create')
-            ->with($contractSheetData)
+            ->shouldReceive('bulkCreate')
+            ->with(Mockery::on(function ($data) use ($contractSheetData) {
+                // Expecting an array containing the contract sheet data
+                if (!is_array($data) || count($data) !== 1) {
+                    return false;
+                }
+                $item = $data[0];
+                foreach ($contractSheetData as $key => $value) {
+                    if (!isset($item[$key]) || $item[$key] !== $value) {
+                        return false;
+                    }
+                }
+                return true;
+            }))
             ->once()
-            ->andReturn($createdContractSheet);
+            ->andReturn([$createdContractSheet]);
 
         $response = $this->withoutMiddleware()
-            ->postJson('/contractsheets', $contractSheetData);
+            ->postJson('/contractsheets', [$contractSheetData]);
 
         $response->assertStatus(201)
-            ->assertJson(['data' => $createdContractSheet]);
+            ->assertJson(['data' => [$createdContractSheet]]);
     }
 
     /** @test */
     public function it_validates_required_fields_when_creating_contract_sheet()
     {
+        // specific errors keys would be like '0.project_id', '0.contract_id' because of wildcard validation
         $response = $this->withoutMiddleware()
-            ->postJson('/contractsheets', []);
+            ->postJson('/contractsheets', [[]]); 
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['contract_id']);
+            ->assertJsonValidationErrors(['0.project_id', '0.contract_id', '0.sheetgroup_id', '0.uom_id', '0.uom_name']);
     }
 
     /** @test */

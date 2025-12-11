@@ -177,7 +177,12 @@ class OrdersheetControllerTest extends TestCase
             'project_id' => 1,
             'order_id' => 1,
             'contract_id' => 1,
+            'contractsheets_id' => 1,
+            'sheet_type' => 1,
+            'sheetgroup_type' => 1,
+            'sheetgroup_id' => 1,
             'sheet_name' => 'New Sheet',
+            'sheet_code' => 'SHT-NEW-001',
             'sheet_description' => 'Sheet description',
             'sheet_qty' => 15.00,
             'sheet_price' => 1500.00,
@@ -186,58 +191,61 @@ class OrdersheetControllerTest extends TestCase
             'sheet_discountvalue' => 0.00,
             'sheet_taxrate' => 10.00,
             'sheet_taxvalue' => 2250.00,
+            'sheet_taxvalue' => 2250.00,
             'sheet_netamt' => 24750.00,
+            'uom_id' => 1,
+            'uom_name' => 'Unit',
         ];
 
         $createdOrdersheet = array_merge(['id' => 3], $ordersheetData);
 
         $this->repository
-            ->shouldReceive('create')
-            ->with($ordersheetData)
+            ->shouldReceive('bulkCreate')
+            ->with([$ordersheetData])
             ->once()
-            ->andReturn($createdOrdersheet);
+            ->andReturn([$createdOrdersheet]);
 
         $response = $this->withoutMiddleware()
-            ->postJson('/ordersheets', $ordersheetData);
+            ->postJson('/ordersheets', [$ordersheetData]);
 
         $response->assertStatus(201)
-            ->assertJson(['data' => $createdOrdersheet]);
+            ->assertJson(['data' => [$createdOrdersheet]]);
     }
 
     /** @test */
     public function it_validates_required_fields_when_creating_ordersheet()
     {
         $response = $this->withoutMiddleware()
-            ->postJson('/ordersheets', []);
+            ->postJson('/ordersheets', [[]]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['project_id', 'order_id']);
+            ->assertJsonValidationErrors(['0.project_id', '0.order_id']);
     }
 
     /** @test */
     public function it_validates_project_exists_when_creating_ordersheet()
     {
         $response = $this->withoutMiddleware()
-            ->postJson('/ordersheets', [
+            ->postJson('/ordersheets', [[
                 'project_id' => 999,
                 'order_id' => 1,
-            ]);
+            ]]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['project_id']);
+            ->assertJsonValidationErrors(['0.project_id']);
     }
 
     /** @test */
     public function it_validates_order_exists_when_creating_ordersheet()
     {
         $response = $this->withoutMiddleware()
-            ->postJson('/ordersheets', [
+            ->postJson('/ordersheets', [[
                 'project_id' => 1,
                 'order_id' => 999,
-            ]);
+            ]]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['order_id']);
+            ->assertJsonValidationErrors(['0.order_id']);
     }
 
     /** @test */
@@ -446,6 +454,7 @@ class OrdersheetControllerTest extends TestCase
             'contractsheets_id' => 1,
             'sheet_dt' => '2025-12-08',
             'sheet_type' => 1,
+            'sheetgroup_type' => 1,
             'sheetgroup_id' => 1,
             'sheetheader_id' => 1,
             'sheet_code' => 'SHT001',
@@ -479,15 +488,15 @@ class OrdersheetControllerTest extends TestCase
         $createdOrdersheet = array_merge(['id' => 5], $ordersheetData);
 
         $this->repository
-            ->shouldReceive('create')
-            ->with($ordersheetData)
+            ->shouldReceive('bulkCreate')
+            ->with([$ordersheetData])
             ->once()
-            ->andReturn($createdOrdersheet);
+            ->andReturn([$createdOrdersheet]);
 
         $response = $this->withoutMiddleware()
-            ->postJson('/ordersheets', $ordersheetData);
+            ->postJson('/ordersheets', [$ordersheetData]);
 
         $response->assertStatus(201)
-            ->assertJson(['data' => $createdOrdersheet]);
+            ->assertJson(['data' => [$createdOrdersheet]]);
     }
 }

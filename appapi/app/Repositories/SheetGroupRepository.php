@@ -12,12 +12,12 @@ class SheetGroupRepository extends EloquentRepository implements SheetGroupRepos
 
     public function getSheetGroupsByType($type)
     {
-        return $this->data->where('sheetgroup_type', $type)->orderBy('display_order')->get();
+        return $this->data->where('sheetgroup_type', $type)->orderBy('sheetgroup_seqno')->get();
     }
 
     public function getSheetGroupsByActive()
     {
-        return $this->data->where('is_active', 1)->orderBy('display_order')->get();
+        return $this->data->where('is_active', 1)->orderBy('sheetgroup_seqno')->get();
     }
 
     public function getSheetGroupByCode($code)

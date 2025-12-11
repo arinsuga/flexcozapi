@@ -19,7 +19,9 @@ class CreateContractsheetsTable extends Migration
             $table->bigInteger('contract_id');
 
             $table->date('sheet_dt')->nullable();
-            $table->integer('sheet_type')->default(0); // 0=header, 1=item
+            $table->integer('sheet_type')->default(1); // 0=header, 1=item
+
+            $table->integer('sheetgroup_type')->default(0); // 0=work, 1=cost
             $table->bigInteger('sheetgroup_id');
             $table->integer('sheetheader_id')->nullable();
             $table->string('sheet_code')->nullable();
@@ -37,7 +39,7 @@ class CreateContractsheetsTable extends Migration
             $table->decimal('sheet_taxvalue', 10, 2)->nullable();
             $table->decimal('sheet_netamt', 10, 2)->nullable();
 
-            $table->string('uom_id')->nullable();
+            $table->bigInteger('uom_id')->nullable();
             $table->string('uom_name')->nullable();
 
             $table->bigInteger('sheetgroup_seqno')->nullable();

@@ -34,8 +34,24 @@ class SheetGroup extends Model
         'sheetgroup_description',
         'sheetgroup_type',
         'is_active',
-        'display_order',
+        'sheetgroup_seqno',
         'sheetgroup_notes',
     ];
+
+    /**
+     * Get the contract sheets for the sheet group.
+     */
+    public function contractSheets()
+    {
+        return $this->hasMany('App\ContractSheet', 'sheetgroup_id');
+    }
+
+    /**
+     * Get the order sheets for the sheet group.
+     */
+    public function orderSheets()
+    {
+        return $this->hasMany('App\Ordersheet', 'sheetgroup_id');
+    }
 
 }

@@ -20,8 +20,9 @@ class CreateOrdersheetsTable extends Migration
             $table->bigInteger('contractsheets_id');
 
             $table->date('sheet_dt')->nullable();
-            $table->integer('sheet_type')->default(0); // 0=header, 1=item
-            $table->bigInteger('sheetgroup_id');
+            $table->integer('sheet_type')->default(1); // 0=header, 1=item
+            $table->integer('sheetgroup_type')->default(0); // 0=work, 1=cost
+            $table->bigInteger('sheetgroup_id'); // base on table sheetgroups
             $table->integer('sheetheader_id')->nullable();
             $table->string('sheet_code')->nullable();
 
@@ -38,7 +39,7 @@ class CreateOrdersheetsTable extends Migration
             $table->decimal('sheet_taxvalue', 10, 2)->nullable();
             $table->decimal('sheet_netamt', 10, 2)->nullable();
 
-            $table->string('uom_id')->nullable();
+            $table->bigInteger('uom_id')->nullable();
             $table->string('uom_name')->nullable();
 
             $table->date('sheet_payment_dt')->nullable();
@@ -49,8 +50,8 @@ class CreateOrdersheetsTable extends Migration
             $table->bigInteger('vendor_id')->nullable();
             $table->string('vendor_name')->nullable();
             
-            $table->string('sheet_refftypeid')->nullable();
-            $table->string('sheet_reffno')->nullable();
+            $table->string('sheet_refftypeid')->nullable(); // base on table refftypes ( PO, WO, INV, DN, PR, GRN )
+            $table->string('sheet_reffno')->nullable(); // refftypes number
 
             $table->bigInteger('order_id');
             $table->string('order_number')->nullable();

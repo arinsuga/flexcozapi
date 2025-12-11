@@ -25,7 +25,7 @@ class CreateSheetgroupsTable extends Migration
             
             // Status & metadata
             $table->boolean('is_active')->default(1); // Active/inactive flag
-            $table->integer('display_order')->nullable(); // Order for display
+            $table->integer('sheetgroup_seqno')->nullable(); // Order for display
             $table->text('sheetgroup_notes')->nullable(); // Additional notes
             
             // Timestamps
