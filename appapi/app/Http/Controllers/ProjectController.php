@@ -15,10 +15,10 @@ class ProjectController extends Controller
         $this->middleware('authjwt');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $projects = $this->repository->getProjectsByActive();
-        return response()->json(['data' => $projects], 200);
+        $projects = $this->repository->getAllPaginated($request->all());
+        return response()->json($projects, 200);
     }
 
     public function show($id)
@@ -37,6 +37,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'project_number' => 'required|unique:projects,project_number',
             'project_name' => 'required|string',
+            'projectstatus_id' => 'nullable|integer|exists:projectstatuses,id',
         ]);
 
         $project = $this->repository->create($request->all());
@@ -54,6 +55,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'project_number' => 'unique:projects,project_number,' . $id,
             'project_name' => 'string',
+            'projectstatus_id' => 'nullable|integer|exists:projectstatuses,id',
         ]);
 
         $updated = $this->repository->update($id, $request->all());

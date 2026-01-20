@@ -14,6 +14,13 @@ class Project extends Model
     protected $table = 'projects';
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['projectStatus'];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -32,8 +39,17 @@ class Project extends Model
         'project_number',
         'project_name',
         'project_description',
+        'projectstatus_id',
         'is_active',
     ];
+
+    /**
+     * Project status that this project belongs to.
+     */
+    public function projectStatus()
+    {
+        return $this->belongsTo('App\ProjectStatus', 'projectstatus_id');
+    }
 
     /**
      * Orders that belong to this project.

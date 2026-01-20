@@ -75,6 +75,15 @@ Route::apiResource('orders', 'OrderController');
 Route::get('orders/project/{projectId}', 'OrderController@getByProject')->name('orders.by.project');
 Route::get('orders/contract/{contractId}', 'OrderController@getByContract')->name('orders.by.contract');
 
+// Order Statuses API
+Route::apiResource('orderstatuses', 'OrderStatusController')->only(['index', 'show']);
+
+// Contract Statuses API
+Route::apiResource('contractstatuses', 'ContractStatusController')->only(['index', 'show']);
+
+// Project Statuses API
+Route::apiResource('projectstatuses', 'ProjectStatusController')->only(['index', 'show']);
+
 // Contract Sheets API
 Route::apiResource('contractsheets', 'ContractSheetController');
 Route::get('contracts/{contractId}/sheets', 'ContractSheetController@getByContract')->name('contractsheets.by.contract');
@@ -101,3 +110,6 @@ Route::apiResource('uoms', 'UomController');
 
 // Reference Types API
 Route::apiResource('refftypes', 'RefftypeController');
+
+// Reports API
+Route::get('reports/order-recap', 'ReportController@orderRecap');

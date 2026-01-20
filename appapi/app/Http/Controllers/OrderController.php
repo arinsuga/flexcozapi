@@ -15,10 +15,10 @@ class OrderController extends Controller
         $this->middleware('authjwt');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $orders = $this->repository->all();
-        return response()->json(['data' => $orders], 200);
+        $orders = $this->repository->getAllPaginated($request->all());
+        return response()->json($orders, 200);
     }
 
     public function show($id)
@@ -41,7 +41,7 @@ class OrderController extends Controller
             'order_number' => 'required|nullable|string|unique:orders,order_number',
             'order_description' => 'required|nullable|string',
             'order_pic' => 'nullable|string',
-            'order_status' => 'nullable|string',
+            'orderstatus_id' => 'nullable|integer|in:0,1,2',
         ]);
 
         $order = $this->repository->create($request->all());
@@ -63,7 +63,7 @@ class OrderController extends Controller
             'order_number' => 'required|nullable|string|unique:orders,order_number,' . $id,
             'order_description' => 'required|nullable|string',
             'order_pic' => 'nullable|string',
-            'order_status' => 'nullable|string',
+            'orderstatus_id' => 'nullable|integer|in:0,1,2',
         ]);
 
         $updated = $this->repository->update($id, $request->all());

@@ -24,19 +24,21 @@ class DatabaseSeeder extends Seeder
         // $this->call('AppUserTableSeeder');
         // $this->call('RoleUserTableSeeder');
         
+        $this->call('ProjectstatusesTableSeeder');
         $this->call('ProjectsTableSeeder');
-        $this->call('ContractsTableSeeder');
-        $this->call('ContractsheetsTableSeeder');
         $this->call('RefftypesTableSeeder');
         $this->call('SheetgroupsTableSeeder');
         $this->call('UomsTableSeeder');
         $this->call('VendortypesTableSeeder');
         $this->call('VendorsTableSeeder');
+
+        $this->call('ContractstatusesTableSeeder');
+        $this->call('ContractsTableSeeder');
+        $this->call('ContractsheetsTableSeeder');
+
+        $this->call('OrderstatusesTableSeeder');
         $this->call('OrdersTableSeeder');
         $this->call('OrdersheetsTableSeeder');
-
-
-
         
         // $this->call('UsersTableSeeder');
         // $this->call('AppsTableSeeder');
