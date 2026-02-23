@@ -53,7 +53,7 @@ class Ordersheet extends Model
         'sheet_taxvalue',
         'sheet_netamt',
         'uom_id',
-        'uom_name',
+        'uom_code',
         'sheet_payment_dt',
         'sheet_payment_status',
         'vendortype_id',
@@ -126,11 +126,11 @@ class Ordersheet extends Model
     }
 
     /**
-     * Uom that this ordersheet belongs to.
+     * Get the UOM normalization associated with the order sheet.
      */
-    public function uom()
+    public function uomNormalization()
     {
-        return $this->belongsTo('App\Uom', 'uom_id');
+        return $this->belongsTo('App\UomNormalization', 'uom_code', 'uom_code');
     }
 
 }

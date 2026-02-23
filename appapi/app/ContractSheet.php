@@ -12,6 +12,25 @@ class ContractSheet extends Model
     protected $table = 'contractsheets';
 
     /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            if ($model->sheetgroup_id) {
+                $sheetGroup = \App\SheetGroup::find($model->sheetgroup_id);
+                if ($sheetGroup) {
+                    $model->sheetgroup_seqno = $sheetGroup->sheetgroup_seqno;
+                }
+            }
+        });
+    }
+
+    /**
      * The attributes that should be cast to native types.
      */
     protected $dates = [
@@ -47,9 +66,10 @@ class ContractSheet extends Model
         'sheet_netamt2',
         'sheet_realamt',
         'uom_id',
-        'uom_name',
+        'uom_code',
         'sheetgroup_seqno',
         'sheet_seqno',
+        'is_active',
     ];
 
     /**
@@ -77,11 +97,19 @@ class ContractSheet extends Model
     }
 
     /**
-     * Get the uom associated with the contract sheet.
+     * Get the UOM normalization associated with the contract sheet.
      */
-    public function uom()
+    public function uomNormalization()
     {
-        return $this->belongsTo('App\Uom', 'uom_id');
+        return $this->belongsTo('App\UomNormalization', 'uom_code', 'uom_code');
+    }
+
+    /**
+     * Get the order summary associated with the contract sheet.
+     */
+    public function orderSummary()
+    {
+        return $this->hasOne('App\ContractOrderSummary', 'contractsheet_id', 'id');
     }
 
 }

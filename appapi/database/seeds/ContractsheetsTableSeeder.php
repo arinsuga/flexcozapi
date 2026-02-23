@@ -39,9 +39,10 @@ class ContractsheetsTableSeeder extends Seeder
                 'sheet_netamt2' => 0.00,
                 'sheet_realamt' => 16650000.00,
                 'uom_id' => 22, // LOT
-                'uom_name' => 'Lot',
+                'uom_code' => 'Lot',
                 'sheetgroup_seqno' => 1,
                 'sheet_seqno' => 1,
+                'is_active' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -162,7 +163,7 @@ class ContractsheetsTableSeeder extends Seeder
                 'sheet_netamt2' => 0.00,
                 'sheet_realamt' => 49950000.00,
                 'uom_id' => 22, // LOT
-                'uom_name' => 'Lot',
+                'uom_code' => 'Lot',
                 'sheetgroup_seqno' => 1,
                 'sheet_seqno' => 2,
                 'created_at' => now(),
@@ -256,7 +257,7 @@ class ContractsheetsTableSeeder extends Seeder
                 'sheet_netamt2' => 0.00,
                 'sheet_realamt' => 8880000.00,
                 'uom_id' => 22, // LOT
-                'uom_name' => 'Lot',
+                'uom_code' => 'Lot',
                 'sheetgroup_seqno' => 2,
                 'sheet_seqno' => 1,
                 'created_at' => now(),
@@ -537,7 +538,7 @@ class ContractsheetsTableSeeder extends Seeder
                 'sheet_netamt2' => 0.00,
                 'sheet_realamt' => 7215000.00,
                 'uom_id' => 22, // LOT
-                'uom_name' => 'Lot',
+                'uom_code' => 'Lot',
                 'sheetgroup_seqno' => 4,
                 'sheet_seqno' => 1,
                 'created_at' => now(),
@@ -631,7 +632,7 @@ class ContractsheetsTableSeeder extends Seeder
                 'sheet_netamt2' => 0.00,
                 'sheet_realamt' => 5550000.00,
                 'uom_id' => 22, // LOT
-                'uom_name' => 'Lot',
+                'uom_code' => 'Lot',
                 'sheetgroup_seqno' => 5,
                 'sheet_seqno' => 1,
                 'created_at' => now(),
@@ -724,7 +725,7 @@ class ContractsheetsTableSeeder extends Seeder
                 'sheet_netamt2' => 0.00,
                 'sheet_realamt' => 6660000.00,
                 'uom_id' => 22, // LOT
-                'uom_name' => 'Lot',
+                'uom_code' => 'Lot',
                 'sheetgroup_seqno' => 5,
                 'sheet_seqno' => 2,
                 'created_at' => now(),
@@ -911,7 +912,7 @@ class ContractsheetsTableSeeder extends Seeder
                 'sheet_netamt2' => 0.00,
                 'sheet_realamt' => 2775000.00,
                 'uom_id' => 22, // LOT
-                'uom_name' => 'Lot',
+                'uom_code' => 'Lot',
                 'sheetgroup_seqno' => 6,
                 'sheet_seqno' => 2,
                 'created_at' => now(),

@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\ContractSheetRepositoryInterface;
+use App\Repositories\Contracts\ContractOrderSummaryRepositoryInterface;
 
 class ContractSheetController extends Controller
 {
     protected $repository;
+    protected $summaryRepository;
 
-    public function __construct(ContractSheetRepositoryInterface $repository)
-    {
+    public function __construct(
+        ContractSheetRepositoryInterface $repository,
+        ContractOrderSummaryRepositoryInterface $summaryRepository
+    ) {
         $this->repository = $repository;
+        $this->summaryRepository = $summaryRepository;
         $this->middleware('authjwt');
     }
 
@@ -36,6 +41,27 @@ class ContractSheetController extends Controller
     {
         $contractsheets = $this->repository->getContractSheetsByContract($contractId);
         return response()->json(['data' => $contractsheets], 200);
+    }
+
+    public function getOrderSummaryByContract($contractId)
+    {
+        $summary = $this->summaryRepository->getSummaryByContract($contractId);
+        return response()->json(['data' => $summary], 200);
+    }
+
+    public function getOrderSummaryByContractAndSheet($contractId, $sheetId)
+    {
+        $summary = $this->summaryRepository->getSummaryByContractAndSheet($contractId, $sheetId);
+        if (!$summary) {
+            return response()->json(['error' => 'Summary not found'], 404);
+        }
+        return response()->json(['data' => $summary], 200);
+    }
+
+    public function getOrderSummaryByProjectAndContract($projectId, $contractId)
+    {
+        $summary = $this->summaryRepository->getSummaryByProjectAndContract($projectId, $contractId);
+        return response()->json(['data' => $summary], 200);
     }
 
     public function store(Request $request)
@@ -64,9 +90,10 @@ class ContractSheetController extends Controller
             '*.sheet_netamt2' => 'nullable|numeric',
             '*.sheet_realamt' => 'nullable|numeric',
             '*.uom_id' => 'required|integer|exists:uoms,id',
-            '*.uom_name' => 'required|string|max:255',
+            '*.uom_code' => 'required|string|max:255',
             '*.sheetgroup_seqno' => 'nullable|integer',
             '*.sheet_seqno' => 'nullable|integer',
+            '*.is_active' => 'nullable|boolean',
         ]);
 
         // $contractsheet = $this->repository->create($request->all());
@@ -99,7 +126,22 @@ class ContractSheetController extends Controller
             return response()->json(['error' => 'Contract sheet not found'], 404);
         }
 
+        // Validation Rule: User can not delete physical data if already use by ordersheet items.
+        if ($contractsheet->ordersheets()->count() > 0) {
+            return response()->json([
+                'error' => 'Conflict',
+                'message' => 'Contract sheet item cannot be deleted because it is already used by ordersheet items.',
+                'in_use' => true
+            ], 409);
+        }
+
         $this->repository->delete($id);
         return response()->json(['message' => 'Contract sheet deleted successfully'], 200);
+    }
+
+    public function getOrderSummaryByContractExcludingOrder($contractId, $orderId)
+    {
+        $summary = $this->summaryRepository->getSummaryByContractExcludingOrder($contractId, $orderId);
+        return response()->json(['data' => $summary], 200);
     }
 }

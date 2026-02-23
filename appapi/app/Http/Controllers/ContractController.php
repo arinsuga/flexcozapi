@@ -38,6 +38,7 @@ class ContractController extends Controller
             'contract_number' => 'required|unique:contracts,contract_number',
             'contract_name' => 'required|string',
             'project_id' => 'required|exists:projects,id',
+            'contract_dt' => 'nullable|date',
             'contractstatus_id' => 'nullable|integer|exists:contractstatuses,id',
             'contract_sheets' => 'nullable|array',
         ]);
@@ -46,7 +47,7 @@ class ContractController extends Controller
             $contract = $this->repository->create($request->all());
             
             if ($request->has('contract_sheets')) {
-                $this->syncSheets($contract, $request->get('contract_sheets'));
+                $this->syncSheets($contract, $request->get('contract_sheets'), $request);
             }
 
             return response()->json(['data' => $contract->load('contractSheets')], 201);
@@ -64,6 +65,7 @@ class ContractController extends Controller
         $validated = $request->validate([
             'contract_number' => 'unique:contracts,contract_number,' . $id,
             'contract_name' => 'string',
+            'contract_dt' => 'nullable|date',
             'contractstatus_id' => 'nullable|integer|exists:contractstatuses,id',
             'contract_sheets' => 'nullable|array',
         ]);
@@ -72,7 +74,7 @@ class ContractController extends Controller
             $this->repository->update($id, $request->all());
             
             if ($request->has('contract_sheets')) {
-                $this->syncSheets($contract, $request->get('contract_sheets'));
+                $this->syncSheets($contract, $request->get('contract_sheets'), $request);
             }
 
             return response()->json(['data' => $contract->load('contractSheets')], 200);
@@ -82,15 +84,46 @@ class ContractController extends Controller
     /**
      * Sync contract sheets with calculations.
      */
-    protected function syncSheets($contract, array $inputSheets)
+    protected function syncSheets($contract, array $inputSheets, Request $request)
     {
         $existingSheetIds = $contract->contractSheets()->pluck('id')->toArray();
-        $inputSheetIds = array_filter(array_column($inputSheets, 'id'), 'is_numeric');
+        $inputSheetIds = array_map('intval', array_filter(array_column($inputSheets, 'id'), function($id) use ($existingSheetIds) {
+            return is_numeric($id) && in_array((int)$id, $existingSheetIds);
+        }));
         
         // 1. Remove sheets not in input
         $idsToDelete = array_diff($existingSheetIds, $inputSheetIds);
         if (!empty($idsToDelete)) {
-            $contract->contractSheets()->whereIn('id', $idsToDelete)->delete();
+            $inUseSheets = [];
+            foreach ($idsToDelete as $id) {
+                $sheet = $contract->contractSheets()->find($id);
+                if ($sheet && $sheet->ordersheets()->count() > 0) {
+                    $inUseSheets[] = $sheet->sheet_code . ' - ' . $sheet->sheet_name;
+                }
+            }
+
+            if (!empty($inUseSheets) && !$request->has('force_soft_delete')) {
+                // Throwing an exception to be caught by the outer try-catch or transaction handler
+                // Actually, since we're inside a transaction callback in update(), we should return a specific response or throw an exception.
+                // But update() returns whatever the callback returns.
+                return response()->json([
+                    'error' => 'Conflict',
+                    'message' => 'The following items are in use and cannot be physically deleted: ' . implode(', ', $inUseSheets) . '. Would you like to mark them as inactive instead?',
+                    'in_use' => true,
+                    'in_use_items' => $inUseSheets
+                ], 409);
+            }
+
+            foreach ($idsToDelete as $id) {
+                $sheet = $contract->contractSheets()->find($id);
+                if ($sheet) {
+                    if ($sheet->ordersheets()->count() > 0) {
+                        $sheet->update(['is_active' => 0]);
+                    } else {
+                        $sheet->delete();
+                    }
+                }
+            }
         }
 
         // 2. Separate headers and items for calculation
@@ -109,39 +142,62 @@ class ContractController extends Controller
         // 3. Process Headers first (to get IDs for items)
         foreach ($headers as &$headerData) {
             $headerId = $headerData['id'] ?? null;
+
+            // Map sheetheader_id if it references a newly created parent header (Rule: nested headers)
+            if (isset($headerData['sheetheader_id']) && isset($tempIdMap[$headerData['sheetheader_id']])) {
+                $headerData['sheetheader_id'] = $tempIdMap[$headerData['sheetheader_id']];
+            }
+
             $isNewHeader = !is_numeric($headerId);
-            
-            // Calculate header totals from items
-            $headerGrossAmt = 0;
-            $headerNetAmt = 0;
-            
             $headerTempId = $isNewHeader ? $headerId : null;
+            
+            // Calculate header totals recursively based on code pattern
+            $headerGrossAmt = 0;
+            $prefix = $headerData['sheet_code'] . '.';
 
             foreach ($items as $item) {
-                if ($item['sheetheader_id'] == ($headerTempId ?: $headerId)) {
+                $itemCode = $item['sheet_code'] ?? '';
+                if (substr($itemCode, 0, strlen($prefix)) === $prefix) {
                     $qty = $item['sheet_qty'] ?? 0;
                     $price = $item['sheet_price'] ?? 0;
-                    $gross = $qty * $price;
-                    $headerGrossAmt += $gross;
-                    $headerNetAmt += $gross; // Assuming net = gross for now, matching plan
+                    $headerGrossAmt += ($qty * $price);
                 }
             }
 
             $headerData['sheet_grossamt'] = $headerGrossAmt;
-            $headerData['sheet_netamt'] = $headerNetAmt;
+            $headerData['sheet_grossamt2'] = $headerGrossAmt;
+            $headerData['sheet_netamt'] = $headerGrossAmt;
+            $headerData['sheet_netamt2'] = $headerGrossAmt;
+            $headerData['sheet_realamt'] = $headerGrossAmt;
             $headerData['contract_id'] = $contract->id;
             $headerData['project_id'] = $contract->project_id;
 
+            // Filter data to only include valid DB columns
+            $filteredHeaderData = collect($headerData)->only([
+                'project_id', 'contract_id', 'sheet_dt', 'sheet_type', 'sheetgroup_type',
+                'sheetgroup_id', 'sheetheader_id', 'sheet_code', 'sheet_name',
+                'sheet_description', 'sheet_notes', 'sheet_qty', 'sheet_price',
+                'sheet_grossamt', 'sheet_discountrate', 'sheet_discountvalue',
+                'sheet_taxrate', 'sheet_taxvalue', 'sheet_netamt', 'sheet_grossamt2',
+                'sheet_netamt2', 'sheet_realamt', 'uom_id', 'uom_code',
+                'sheetgroup_seqno', 'sheet_seqno', 'is_active'
+            ])->toArray();
+
+            // Only set is_active to 1 if it's not explicitly provided as 0
+            if (!isset($filteredHeaderData['is_active'])) {
+                $filteredHeaderData['is_active'] = 1;
+            }
+
             if ($isNewHeader) {
-                unset($headerData['id']);
-                $newHeader = $contract->contractSheets()->create($headerData);
+                $newHeader = $contract->contractSheets()->create($filteredHeaderData);
                 if ($headerTempId) {
                     $tempIdMap[$headerTempId] = $newHeader->id;
                 }
             } else {
-                $contract->contractSheets()->where('id', $headerId)->update(
-                    collect($headerData)->except(['id'])->toArray()
-                );
+                $headerSheet = $contract->contractSheets()->find($headerId);
+                if ($headerSheet) {
+                    $headerSheet->update($filteredHeaderData);
+                }
             }
         }
 
@@ -150,7 +206,7 @@ class ContractController extends Controller
             $itemId = $itemData['id'] ?? null;
             
             // Map header ID if it was a new header
-            if (isset($tempIdMap[$itemData['sheetheader_id']])) {
+            if (isset($itemData['sheetheader_id']) && isset($tempIdMap[$itemData['sheetheader_id']])) {
                 $itemData['sheetheader_id'] = $tempIdMap[$itemData['sheetheader_id']];
             }
 
@@ -158,16 +214,33 @@ class ContractController extends Controller
             $price = $itemData['sheet_price'] ?? 0;
             $itemData['sheet_grossamt'] = $qty * $price;
             $itemData['sheet_netamt'] = $qty * $price;
+            $itemData['sheet_realamt'] = $qty * $price;
             $itemData['contract_id'] = $contract->id;
             $itemData['project_id'] = $contract->project_id;
 
+            // Filter data to only include valid DB columns
+            $filteredItemData = collect($itemData)->only([
+                'project_id', 'contract_id', 'sheet_dt', 'sheet_type', 'sheetgroup_type',
+                'sheetgroup_id', 'sheetheader_id', 'sheet_code', 'sheet_name',
+                'sheet_description', 'sheet_notes', 'sheet_qty', 'sheet_price',
+                'sheet_grossamt', 'sheet_discountrate', 'sheet_discountvalue',
+                'sheet_taxrate', 'sheet_taxvalue', 'sheet_netamt', 'sheet_grossamt2',
+                'sheet_netamt2', 'sheet_realamt', 'uom_id', 'uom_code',
+                'sheetgroup_seqno', 'sheet_seqno', 'is_active'
+            ])->toArray();
+
+            // Only set is_active to 1 if it's not explicitly provided as 0
+            if (!isset($filteredItemData['is_active'])) {
+                $filteredItemData['is_active'] = 1;
+            }
+
             if (!is_numeric($itemId)) {
-                unset($itemData['id']);
-                $contract->contractSheets()->create($itemData);
+                $contract->contractSheets()->create($filteredItemData);
             } else {
-                $contract->contractSheets()->where('id', $itemId)->update(
-                    collect($itemData)->except(['id'])->toArray()
-                );
+                $itemSheet = $contract->contractSheets()->find($itemId);
+                if ($itemSheet) {
+                    $itemSheet->update($filteredItemData);
+                }
             }
         }
     }
@@ -178,6 +251,15 @@ class ContractController extends Controller
         
         if (!$contract) {
             return response()->json(['error' => 'Contract not found'], 404);
+        }
+
+        // Validation Rule: User can not delete physical data if already use by order.
+        if ($contract->orders()->count() > 0) {
+            return response()->json([
+                'error' => 'Conflict',
+                'message' => 'Contract cannot be deleted because it is already used by orders.',
+                'in_use' => true
+            ], 409);
         }
 
         return \DB::transaction(function () use ($id, $contract) {

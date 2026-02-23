@@ -38,7 +38,15 @@ class OrdersheetController extends Controller
         return response()->json(['data' => $ordersheets], 200);
     }
 
+    public function getByOrderOptimized($orderId)
+    {
+        // Only load vendor and uom relationships for performance
+        $ordersheets = $this->repository->getOrdersheetsByOrderWithRelations($orderId, ['vendor', 'uom']);
+        return response()->json(['data' => $ordersheets], 200);
+    }
+
     public function getByProject($projectId)
+
     {
         $ordersheets = $this->repository->getOrdersheetsByProject($projectId);
         return response()->json(['data' => $ordersheets], 200);
@@ -75,7 +83,7 @@ class OrdersheetController extends Controller
             '*.sheet_taxvalue' => 'nullable|numeric',
             '*.sheet_netamt' => 'required|nullable|numeric',
             '*.uom_id' => 'required|nullable|integer|exists:uoms,id',
-            '*.uom_name' => 'required|nullable|string|max:255',
+            '*.uom_code' => 'required|nullable|string|max:255',
             '*.sheet_payment_dt' => 'nullable|date',
             '*.sheet_payment_status' => 'nullable|integer',
             '*.vendortype_id' => 'nullable|exists:vendortypes,id',
@@ -126,7 +134,7 @@ class OrdersheetController extends Controller
             'sheet_taxvalue' => 'nullable|numeric',
             'sheet_netamt' => 'nullable|numeric',
             'uom_id' => 'nullable|integer|exists:uoms,id',
-            'uom_name' => 'nullable|string|max:255',
+            'uom_code' => 'nullable|string|max:255',
             'sheet_payment_dt' => 'nullable|date',
             'sheet_payment_status' => 'nullable|integer',
             'vendortype_id' => 'nullable|exists:vendortypes,id',

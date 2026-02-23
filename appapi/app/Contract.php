@@ -78,7 +78,15 @@ class Contract extends Model
      */
     public function contractSheets()
     {
-        return $this->hasMany('App\ContractSheet', 'contract_id');
+        return $this->hasMany('App\ContractSheet', 'contract_id')->orderBy('sheetgroup_seqno', 'asc')->orderBy('sheet_seqno', 'asc');
+    }
+
+    /**
+     * Summary of orders for this contract.
+     */
+    public function orderSummaries()
+    {
+        return $this->hasMany('App\ContractOrderSummary', 'contract_id');
     }
 
 }

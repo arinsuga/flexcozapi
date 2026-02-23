@@ -86,11 +86,16 @@ Route::apiResource('projectstatuses', 'ProjectStatusController')->only(['index',
 
 // Contract Sheets API
 Route::apiResource('contractsheets', 'ContractSheetController');
+Route::get('contractsheets/summary/project/{projectId}/contract/{contractId}', 'ContractSheetController@getOrderSummaryByProjectAndContract')->name('contractsheets.summary.by.project.and.contract');
+Route::get('contractsheets/summary/{contractId}/exclude-order/{orderId}', 'ContractSheetController@getOrderSummaryByContractExcludingOrder')->name('contractsheets.summary.exclude-order');
+Route::get('contractsheets/summary/{contractId}', 'ContractSheetController@getOrderSummaryByContract')->name('contractsheets.summary.by.contract');
+Route::get('contractsheets/summary/{contractId}/{contractsheetId}', 'ContractSheetController@getOrderSummaryByContractAndSheet')->name('contractsheets.summary.by.contract.and.sheet');
 Route::get('contracts/{contractId}/sheets', 'ContractSheetController@getByContract')->name('contractsheets.by.contract');
 
 // Ordersheets API
 Route::apiResource('ordersheets', 'OrdersheetController');
 Route::get('ordersheets/order/{orderId}', 'OrdersheetController@getByOrder')->name('ordersheets.by.order');
+Route::get('ordersheets/order/{orderId}/optimized', 'OrdersheetController@getByOrderOptimized')->name('ordersheets.by.order.optimized');
 Route::get('ordersheets/project/{projectId}', 'OrdersheetController@getByProject')->name('ordersheets.by.project');
 Route::get('ordersheets/contract/{contractId}', 'OrdersheetController@getByContract')->name('ordersheets.by.contract');
 
@@ -105,8 +110,8 @@ Route::get('vendortypes/{vendorTypeId}/vendors', 'VendorController@getByType')->
 // Vendor Types API
 Route::apiResource('vendortypes', 'VendorTypeController');
 
-// Units of Measure API
-Route::apiResource('uoms', 'UomController');
+// UOM Normalizations API
+Route::apiResource('uom-normalizations', 'UomNormalizationController');
 
 // Reference Types API
 Route::apiResource('refftypes', 'RefftypeController');

@@ -37,7 +37,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'project_number' => 'required|unique:projects,project_number',
             'project_name' => 'required|string',
-            'projectstatus_id' => 'nullable|integer|exists:projectstatuses,id',
+            'projectstatus_id' => 'nullable|integer',
         ]);
 
         $project = $this->repository->create($request->all());
@@ -55,7 +55,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'project_number' => 'unique:projects,project_number,' . $id,
             'project_name' => 'string',
-            'projectstatus_id' => 'nullable|integer|exists:projectstatuses,id',
+            'projectstatus_id' => 'nullable|integer',
         ]);
 
         $updated = $this->repository->update($id, $request->all());
@@ -68,6 +68,15 @@ class ProjectController extends Controller
         
         if (!$project) {
             return response()->json(['error' => 'Project not found'], 404);
+        }
+
+        // Validation Rule: User can not delete physical data if already use by contract or order.
+        if ($project->contracts()->count() > 0 || $project->orders()->count() > 0) {
+            return response()->json([
+                'error' => 'Conflict',
+                'message' => 'Project cannot be deleted because it is already used by contracts or orders.',
+                'in_use' => true
+            ], 409);
         }
 
         $this->repository->delete($id);

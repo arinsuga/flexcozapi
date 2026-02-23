@@ -10,7 +10,6 @@ use App\Repositories\Contracts\ContractRepositoryInterface;
 use App\Repositories\Contracts\SheetGroupRepositoryInterface;
 use App\Repositories\Contracts\VendorRepositoryInterface;
 use App\Repositories\Contracts\VendorTypeRepositoryInterface;
-use App\Repositories\Contracts\UomRepositoryInterface;
 use App\Repositories\Contracts\RefftypeRepositoryInterface;
 use App\Repositories\Contracts\ContractSheetRepositoryInterface;
 use App\Repositories\Contracts\OrderRepositoryInterface;
@@ -18,6 +17,8 @@ use App\Repositories\Contracts\OrdersheetRepositoryInterface;
 use App\Repositories\Contracts\OrderStatusRepositoryInterface;
 use App\Repositories\Contracts\ContractStatusRepositoryInterface;
 use App\Repositories\Contracts\ProjectStatusRepositoryInterface;
+use App\Repositories\Contracts\UomNormalizationRepositoryInterface;
+use App\Repositories\Contracts\ContractOrderSummaryRepositoryInterface;
 
 // Repository Implementations
 use App\Repositories\ProjectRepository;
@@ -25,7 +26,6 @@ use App\Repositories\ContractRepository;
 use App\Repositories\SheetGroupRepository;
 use App\Repositories\VendorRepository;
 use App\Repositories\VendorTypeRepository;
-use App\Repositories\UomRepository;
 use App\Repositories\RefftypeRepository;
 use App\Repositories\ContractSheetRepository;
 use App\Repositories\OrderRepository;
@@ -33,6 +33,8 @@ use App\Repositories\OrdersheetRepository;
 use App\Repositories\Eloquents\OrderStatusRepository;
 use App\Repositories\ContractStatusRepository;
 use App\Repositories\ProjectStatusRepository;
+use App\Repositories\UomNormalizationRepository;
+use App\Repositories\ContractOrderSummaryRepository;
 
 // Models
 use App\Project;
@@ -40,7 +42,6 @@ use App\Contract;
 use App\SheetGroup;
 use App\Vendor;
 use App\VendorType;
-use App\Uom;
 use App\Refftype;
 use App\ContractSheet;
 use App\Order;
@@ -48,6 +49,8 @@ use App\Ordersheet;
 use App\OrderStatus;
 use App\ContractStatus;
 use App\ProjectStatus;
+use App\UomNormalization;
+use App\ContractOrderSummary;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -76,11 +79,6 @@ class RepositoryServiceProvider extends ServiceProvider
         // VendorType Repository Binding
         $this->app->bind(VendorTypeRepositoryInterface::class, function ($app) {
             return new VendorTypeRepository(new VendorType());
-        });
-
-        // Uom Repository Binding
-        $this->app->bind(UomRepositoryInterface::class, function ($app) {
-            return new UomRepository(new Uom());
         });
 
         // Refftype Repository Binding
@@ -115,6 +113,16 @@ class RepositoryServiceProvider extends ServiceProvider
         // ProjectStatus Repository Binding
         $this->app->bind(ProjectStatusRepositoryInterface::class, function ($app) {
             return new ProjectStatusRepository(new ProjectStatus());
+        });
+
+        // UomNormalization Repository Binding
+        $this->app->bind(UomNormalizationRepositoryInterface::class, function ($app) {
+            return new UomNormalizationRepository(new UomNormalization());
+        });
+
+        // ContractOrderSummary Repository Binding
+        $this->app->bind(ContractOrderSummaryRepositoryInterface::class, function ($app) {
+            return new ContractOrderSummaryRepository(new ContractOrderSummary());
         });
     }
 
